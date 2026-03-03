@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html lang="en"></html>
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <title>Restaurant Order System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     
-    <title>RestaurantOrderSystem</title>
+
 </head>
-
 <body>
-    <h1>test</h1>
+    <div class="twocolumn">
+        <div class="ordercolumn">
+            <h2>Orders Column</h2>
+        </div>
+        <div class="numpadcolumn">
+            <h2>Numpad Column</h2>
+        </div>
+    </div>
 </body>
-
 </html>
