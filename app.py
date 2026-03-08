@@ -1,31 +1,36 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, g
 import sqlite3
 
 app = Flask(__name__)
 
 
+DATABASE = 'RestaurantDatabase.db'
+
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        db = g._database = sqlite3.connect("RestaurantDatabse.db")
+        db = g._database = sqlite3.connect(DATABASE)
+        db.row_factory = sqlite3.Row
     return db
 
 @app.teardown_appcontext
 def close_connection(exception):
-    # session["user"] = None
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
 
-def query_db(query, args=(), one=False, inserting=False):
+def query_db(query, args=(), one=False, commit=False):
     cur = get_db().execute(query, args)
-    rv = cur.fetchall()
-    cur.close()
-    if inserting:
+    if commit:
         get_db().commit()
-        return cur.lastrowid
+        lastrowid = cur.lastrowid
+        cur.close()
+        return lastrowid
     else:
+        rv = cur.fetchall()
+        cur.close()
         return (rv[0] if rv else None) if one else rv
+
 
 
 
@@ -33,8 +38,6 @@ def query_db(query, args=(), one=False, inserting=False):
 def cashier_screen():
     return render_template("cashier_screen.html")
 
-@app.post("/")
-def
 
 if __name__ == '__main__':
     app.run(debug=True)
