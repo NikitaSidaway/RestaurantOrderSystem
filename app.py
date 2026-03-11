@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g, request
+from flask import Flask, render_template, g, request, redirect
 import sqlite3
 
 app = Flask(__name__)
@@ -38,12 +38,17 @@ def query_db(query, args=(), one=False, commit=False):
 def cashier_screen():
     return render_template("cashier_screen.html")
 
-@app.post("/")
+@app.post("/add_order")
 def order_numpad():
-    order_number = request.form("order_number").
+    order_number = request.form["order_number"]
 
-    sql_order_number = ("INSERT INTO Orders (order_number)
+    sql_order_number = ("INSERT INTO Orders (order_number) VALUES (?);")
 
+
+    query_db(sql_order_number, (order_number,))
+
+    get_db().commit()
+    return redirect('/') 
 
 if __name__ == '__main__':
     app.run(debug=True)
