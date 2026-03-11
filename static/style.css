@@ -55,10 +55,10 @@ button {
 }
 
 form {
-  margin-left: 400px;
-  margin-right: 400px;
-  margin-top: 150px;
   font-size: 35px;
+  max-width: 285px;
+  margin: 0 auto;
+  margin-top: 27%;
 }
 
 input {
