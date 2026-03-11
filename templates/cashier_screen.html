@@ -14,10 +14,13 @@
             <h2>Orders Column</h2>
         </div>
         <div class="numpadcolumn">
-            <h2>Numpad Column</h2>
             <form action="/add_order" method="post">
+                
                 <input type="text" id="display" name="order_number" readonly>
+
                 <div class="numpad">
+
+
                     <button type="button" onclick="addNum(1)">1</button>
                     <button type="button" onclick="addNum(2)">2</button>
                     <button type="button" onclick="addNum(3)">3</button>
@@ -27,10 +30,9 @@
                     <button type="button" onclick="addNum(7)">7</button>
                     <button type="button" onclick="addNum(8)">8</button>
                     <button type="button" onclick="addNum(9)">9</button>
-                    <button type="button" onclick="addNum(0)">0</button>
-                    <button type="button" onclick="addNum(1)">1</button>
-
-                    <button type="submit">Submit</button>
+                    <button type="reset" onclick="addNum(0)">&#10008;</button>
+                    <button type="button" onclick="addNum(1)">0</button>
+                    <button type="submit">&#10004;</button>
                 </div>
             </form>
 
