@@ -12,6 +12,11 @@
     <div class="twocolumn">
         <div class="ordercolumn">
             <h2>Orders Column</h2>
+            {% for item in orders %}
+                <div class="card">
+                    <h3>{{ item[0] }} </h3>
+                </div>
+            {% endfor %}
         </div>
         <div class="numpadcolumn">
             <form action="/add_order" method="post">

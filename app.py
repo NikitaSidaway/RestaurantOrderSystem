@@ -36,7 +36,10 @@ def query_db(query, args=(), one=False, commit=False):
 
 @app.route("/")
 def cashier_screen():
-    return render_template("cashier_screen.html")
+
+    orders = query_db("SELECT order_number, status FROM Orders ORDER BY id")
+
+    return render_template("cashier_screen.html", orders=orders)
 
 @app.post("/add_order")
 def order_numpad():
