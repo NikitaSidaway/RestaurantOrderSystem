@@ -34,6 +34,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+h2 {
+  text-align: center;
+}
 
 h3 {
   text-align: center;
@@ -47,8 +50,20 @@ h3 {
 }
 
 .twocolumn {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  margin-left: 60px;
+  margin-right: 60px;
+}
+
+.numpadcolumn {
+  max-height: 100%;
+}
+
+.ordercolumn {
+  margin-top: 40px;
+  overflow-y: auto;
 }
 
 .card {
