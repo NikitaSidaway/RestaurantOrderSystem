@@ -41,6 +41,7 @@ h2 {
 h3 {
   text-align: center;
   font-size: 35px;
+  flex: 3;
 }
 
 
@@ -63,8 +64,13 @@ h3 {
   gap: 10px;
 }
 
-.ordercoloumnbutton {
+.ordercoloumnready {
   flex: 1;
+}
+
+.ordercoloumndelete {
+  flex: 1;
+
 }
 
 .numpadcolumn {

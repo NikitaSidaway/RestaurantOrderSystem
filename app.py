@@ -44,13 +44,20 @@ def cashier_screen():
 @app.post("/change_order")
 def change_order():
     print("test")
-    request_change = request.form.get('action')
-    order_number = request.form.get("order_id")
+    request_change = request.form.get("change")
+    order_id = request.form.get("order_id")
     
     if request_change == "delete":
-        print("delete")
+
+        sql_order_change = ("DELETE FROM Orders WHERE id = (?);")
+        query_db(sql_order_change, (order_id))
+        get_db().commit()
+
     elif request_change == "ready":
-        print("ready")
+        
+        sql_order_change = ("UPDATE Orders SET status = 1 WHERE id = (?);")
+        query_db(sql_order_change, (order_id))
+        get_db().commit()
 
     return redirect('/')
 

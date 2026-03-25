@@ -16,12 +16,12 @@
             {% for item in orders %}
                 <div class="card">
                     <form action="/change_order" method="post" class="orderscoloumnform">
-                        <h3>{{ item[1] }}</h3>
                         <input type="hidden" name="order_id" value={{ item[0] }}>
 
                         <div class="buttoncontainer">
-                            <button type="submit" name="action" value="delete" class="ordercoloumnbutton">Delete</button>
-                            <button type="submit" name="action" value="ready" class="ordercoloumnbutton">Ready</button>
+                            <h3>{{ item[1] }}</h3>
+                            <button type="submit" name="change" value="delete" class="ordercoloumndelete">Delete</button>
+                            <button type="submit" name="change" value="ready" class="ordercoloumnready">Ready</button>
                         </div>
 
                     </form>
