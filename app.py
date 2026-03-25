@@ -37,9 +37,22 @@ def query_db(query, args=(), one=False, commit=False):
 @app.route("/")
 def cashier_screen():
 
-    orders = query_db("SELECT order_number, status FROM Orders ORDER BY id")
+    orders = query_db("SELECT id, order_number, status FROM Orders ORDER BY id")
 
     return render_template("cashier_screen.html", orders=orders)
+
+@app.post("/change_order")
+def change_order():
+    print("test")
+    request_change = request.form.get('action')
+    order_number = request.form.get("order_id")
+    
+    if request_change == "delete":
+        print("delete")
+    elif request_change == "ready":
+        print("ready")
+
+    return redirect('/')
 
 @app.post("/add_order")
 def order_numpad():
@@ -51,7 +64,7 @@ def order_numpad():
     query_db(sql_order_number, (order_number,))
 
     get_db().commit()
-    return redirect('/') 
+    return redirect('/')
 
 if __name__ == '__main__':
     app.run(debug=True)

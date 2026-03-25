@@ -12,32 +12,43 @@
     <div class="twocolumn">
         <div class="ordercolumn">
             <h2>Orders Column</h2>
+            
             {% for item in orders %}
                 <div class="card">
-                    <h3>{{ item[0] }} </h3>
+                    <form action="/change_order" method="post" class="orderscoloumnform">
+                        <h3>{{ item[1] }}</h3>
+                        <input type="hidden" name="order_id" value={{ item[0] }}>
+
+                        <div class="buttoncontainer">
+                            <button type="submit" name="action" value="delete" class="ordercoloumnbutton">Delete</button>
+                            <button type="submit" name="action" value="ready" class="ordercoloumnbutton">Ready</button>
+                        </div>
+
+                    </form>
                 </div>
             {% endfor %}
+
         </div>
         <div class="numpadcolumn">
-            <form action="/add_order" method="post">
+            <form action="/add_order" method="post" class="numpadform">
                 
                 <input type="text" id="display" name="order_number" readonly>
 
                 <div class="numpad">
 
 
-                    <button type="button" onclick="addNum(1)">1</button>
-                    <button type="button" onclick="addNum(2)">2</button>
-                    <button type="button" onclick="addNum(3)">3</button>
-                    <button type="button" onclick="addNum(4)">4</button>
-                    <button type="button" onclick="addNum(5)">5</button>
-                    <button type="button" onclick="addNum(6)">6</button>
-                    <button type="button" onclick="addNum(7)">7</button>
-                    <button type="button" onclick="addNum(8)">8</button>
-                    <button type="button" onclick="addNum(9)">9</button>
-                    <button type="reset" onclick="addNum(0)">&#10008;</button>
-                    <button type="button" onclick="addNum(1)">0</button>
-                    <button type="submit">&#10004;</button>
+                    <button class="numpadbutton" type="button" onclick="addNum(1)">1</button>
+                    <button class="numpadbutton" type="button" onclick="addNum(2)">2</button>
+                    <button class="numpadbutton" type="button" onclick="addNum(3)">3</button>
+                    <button class="numpadbutton" type="button" onclick="addNum(4)">4</button>
+                    <button class="numpadbutton" type="button" onclick="addNum(5)">5</button>
+                    <button class="numpadbutton" type="button" onclick="addNum(6)">6</button>
+                    <button class="numpadbutton" type="button" onclick="addNum(7)">7</button>
+                    <button class="numpadbutton" type="button" onclick="addNum(8)">8</button>
+                    <button class="numpadbutton" type="button" onclick="addNum(9)">9</button>
+                    <button class="numpadbutton" type="reset" onclick="addNum(0)">&#10008;</button>
+                    <button class="numpadbutton" type="button" onclick="addNum(1)">0</button>
+                    <button class="numpadbutton" type="submit">&#10004;</button>
                 </div>
             </form>
 
