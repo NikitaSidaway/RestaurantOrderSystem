@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant Order System</title>
+    <title>Cashier Screen</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     
 
 </head>
 <body>
-    <div class="twocolumn">
-        <div class="ordercolumn">
+    <div class="two-column">
+        <div class="order-column">
             <h2>Orders Column</h2>
             
             {% for item in orders %}
-                <div class="card">
-                    <form action="/change_order" method="post" class="orderscoloumnform">
+                <div class="orders-card">
+                    <form action="/change_order" method="post" class="orders-coloumn-form">
                         <input type="hidden" name="order_id" value={{ item[0] }}>
 
-                        <div class="buttoncontainer">
+                        <div class="button-container">
                             <h3>{{ item[1] }}</h3>
-                            <button type="submit" name="change" value="delete" class="ordercoloumndelete">Delete</button>
-                            <button type="submit" name="change" value="ready" class="ordercoloumnready">Ready</button>
+                            <button type="submit" name="change" value="delete" class="order-coloumn-delete">Delete</button>
+                            <button type="submit" name="change" value="ready" class="order-coloumn-ready">Ready</button>
                         </div>
 
                     </form>
@@ -29,26 +29,26 @@
             {% endfor %}
 
         </div>
-        <div class="numpadcolumn">
-            <form action="/add_order" method="post" class="numpadform">
+        <div class="numpad-column">
+            <form action="/add_order" method="post" class="numpad-form">
                 
-                <input type="text" id="display" name="order_number" readonly>
+                <input type="text" id="display" name="order_number" class="numpad-input" readonly>
 
                 <div class="numpad">
 
 
-                    <button class="numpadbutton" type="button" onclick="addNum(1)">1</button>
-                    <button class="numpadbutton" type="button" onclick="addNum(2)">2</button>
-                    <button class="numpadbutton" type="button" onclick="addNum(3)">3</button>
-                    <button class="numpadbutton" type="button" onclick="addNum(4)">4</button>
-                    <button class="numpadbutton" type="button" onclick="addNum(5)">5</button>
-                    <button class="numpadbutton" type="button" onclick="addNum(6)">6</button>
-                    <button class="numpadbutton" type="button" onclick="addNum(7)">7</button>
-                    <button class="numpadbutton" type="button" onclick="addNum(8)">8</button>
-                    <button class="numpadbutton" type="button" onclick="addNum(9)">9</button>
-                    <button class="numpadbutton" type="reset" onclick="addNum(0)">&#10008;</button>
-                    <button class="numpadbutton" type="button" onclick="addNum(1)">0</button>
-                    <button class="numpadbutton" type="submit">&#10004;</button>
+                    <button class="numpad-button" type="button" onclick="addNum(1)">1</button>
+                    <button class="numpad-button" type="button" onclick="addNum(2)">2</button>
+                    <button class="numpad-button" type="button" onclick="addNum(3)">3</button>
+                    <button class="numpad-button" type="button" onclick="addNum(4)">4</button>
+                    <button class="numpad-button" type="button" onclick="addNum(5)">5</button>
+                    <button class="numpad-button" type="button" onclick="addNum(6)">6</button>
+                    <button class="numpad-button" type="button" onclick="addNum(7)">7</button>
+                    <button class="numpad-button" type="button" onclick="addNum(8)">8</button>
+                    <button class="numpad-button" type="button" onclick="addNum(9)">9</button>
+                    <button class="numpad-button" type="reset" onclick="addNum(0)">&#10008;</button>
+                    <button class="numpad-button" type="button" onclick="addNum(1)">0</button>
+                    <button class="numpad-button" type="submit">&#10004;</button>
                 </div>
             </form>
 

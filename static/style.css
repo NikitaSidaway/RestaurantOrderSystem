@@ -34,6 +34,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+
+
 h2 {
   text-align: center;
 }
@@ -44,13 +46,19 @@ h3 {
   flex: 3;
 }
 
+h4 {
+  text-align: center;
+  font-size: 100px;
+}
 
-.onecoloumn {
+
+
+.one-coloumn {
   display: grid;
   gap: 40px;
 }
 
-.twocolumn {
+.two-column {
   display: grid;
   grid-template-columns: 1fr 1fr;
   height: 100vh;
@@ -58,35 +66,14 @@ h3 {
   margin-right: 60px;
 }
 
-.buttoncontainer {
-  display: flex;
-  width: 100%;
-  gap: 10px;
-}
 
-.ordercoloumnready {
-  flex: 1;
-}
 
-.ordercoloumndelete {
-  flex: 1;
-
-}
-
-.numpadcolumn {
-  max-height: 100%;
-}
-
-.ordercolumn {
+.order-column {
   margin-top: 40px;
   overflow-y: auto;
 }
 
-.orderscoloumnform {
-  color: black;
-}
-
-.card {
+.orders-card {
   color: gray;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
@@ -98,6 +85,29 @@ h3 {
   padding: 7px;
 }
 
+.orders-coloumn-form {
+  color: black;
+}
+
+.button-container {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+
+.order-coloumn-ready {
+  flex: 1;
+}
+
+.order-coloumn-delete {
+  flex: 1;
+}
+
+
+
+.numpad-column {
+  max-height: 100%;
+}
 
 .numpad {
   display: grid;
@@ -105,19 +115,14 @@ h3 {
   gap: 5px;
 }
 
-.numpadform {
+.numpad-form {
   font-size: 35px;
   max-width: 280px;
   margin: 0 auto;
   margin-top: 27%;
 }
 
-.numpadbutton {
-  height: 90px;
-  width: 90px;
-}
-
-input {
+.numpad-input {
   width: 100%;
   height: 65px;
   margin-bottom: 10px;
@@ -125,3 +130,27 @@ input {
   font-weight: 700;
 }
 
+.numpad-button {
+  height: 90px;
+  width: 90px;
+}
+
+
+
+.customer-screen-container {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+
+.preparing-column {
+  flex: 1;
+}
+
+.please-collect-column {
+  flex: 1;
+}
+
+.image-column {
+  flex: 1;
+}

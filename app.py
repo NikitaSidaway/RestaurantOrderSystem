@@ -41,6 +41,12 @@ def cashier_screen():
 
     return render_template("cashier_screen.html", orders=orders)
 
+
+@app.route("/customer_screen")
+def customer_screen():
+    return render_template("customer_screen.html")
+
+
 @app.post("/change_order")
 def change_order():
     print("test")
@@ -61,6 +67,7 @@ def change_order():
 
     return redirect('/')
 
+
 @app.post("/add_order")
 def order_numpad():
     order_number = request.form["order_number"]
@@ -72,6 +79,7 @@ def order_numpad():
 
     get_db().commit()
     return redirect('/')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
