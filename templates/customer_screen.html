@@ -12,9 +12,15 @@
     <div class=customer-screen-container>
         <div class="preparing-column">
             <h4>Preparing..</h4>
+            {% for item in not_ready_orders %}
+                <h1>test</h1>
+            {% endfor %}
         </div>
         <div class="please-collect-column">
             <h4>Please Collect..</h4>
+            {% for item in ready_orders %}
+                <h1>test</h1>
+            {% endfor %}
         </div>
         <div class="image-column">
 

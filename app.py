@@ -44,7 +44,11 @@ def cashier_screen():
 
 @app.route("/customer_screen")
 def customer_screen():
-    return render_template("customer_screen.html")
+
+    not_ready = query_db("SELECT id, order_number, status FROM Orders WHERE status IS NULL ORDER BY id")
+    ready = query_db("SELECT id, order_number, status FROM Orders WHERE status = 1 ORDER BY id")
+
+    return render_template("customer_screen.html", not_ready_orders=not_ready, ready_orders=ready)
 
 
 @app.post("/change_order")
