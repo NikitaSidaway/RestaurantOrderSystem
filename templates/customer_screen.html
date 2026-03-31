@@ -13,17 +13,21 @@
         <div class="preparing-column">
             <h4>Preparing..</h4>
             {% for item in not_ready_orders %}
-                <h1>test</h1>
+                <div class="display-card">
+                    <h5>{{ item[1] }}</h5>
+                </div>
             {% endfor %}
         </div>
         <div class="please-collect-column">
             <h4>Please Collect..</h4>
             {% for item in ready_orders %}
-                <h1>test</h1>
+                <div class="display-card">
+                    <h5>{{ item[1] }}</h5>
+                </div>
             {% endfor %}
         </div>
         <div class="image-column">
-
+            <img class="display-image" src="static/images/placeholder.png">
         </div>
     </div>
 </body>
