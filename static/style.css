@@ -111,6 +111,8 @@ h5 {
 
 .numpad-column {
   max-height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .numpad {
@@ -123,7 +125,7 @@ h5 {
   font-size: 35px;
   max-width: 280px;
   margin: 0 auto;
-  margin-top: 27%;
+  margin-bottom: 10%
 }
 
 .numpad-input {
