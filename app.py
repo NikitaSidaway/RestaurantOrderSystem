@@ -1,8 +1,10 @@
 from flask import Flask, render_template, g, request, redirect
+from flask_socketio import SocketIO, emit
 import sqlite3
 
 app = Flask(__name__)
 
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 DATABASE = 'RestaurantDatabase.db'
 
@@ -33,6 +35,14 @@ def query_db(query, args=(), one=False, commit=False):
 
 
 
+def emit_order_update():
+    not_ready = query_db("SELECT id, order_number, status FROM Orders WHERE status IS NULL ORDER BY id")
+    ready = query_db("SELECT id, order_number, status FROM Orders WHERE status = 1 ORDER BY id")
+
+    socketio.emit('order_update', {
+        'not_ready_orders': [{'id': row['id'], 'order_number': row['order_number']} for row in not_ready],
+        'ready_orders': [{'id': row['id'], 'order_number': row['order_number']} for row in ready]
+    })
 
 @app.route("/")
 def cashier_screen():
@@ -60,14 +70,16 @@ def change_order():
     if request_change == "delete":
 
         sql_order_change = ("DELETE FROM Orders WHERE id = (?);")
-        query_db(sql_order_change, (order_id))
+        query_db(sql_order_change, (order_id,))
         get_db().commit()
 
     elif request_change == "ready":
         
         sql_order_change = ("UPDATE Orders SET status = 1 WHERE id = (?);")
-        query_db(sql_order_change, (order_id))
+        query_db(sql_order_change, (order_id,))
         get_db().commit()
+
+    emit_order_update()
 
     return redirect('/')
 
@@ -82,8 +94,14 @@ def order_numpad():
     query_db(sql_order_number, (order_number,))
 
     get_db().commit()
+
+    emit_order_update()
+
     return redirect('/')
 
-
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+    emit_order_update()
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)
