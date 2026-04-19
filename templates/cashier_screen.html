@@ -13,18 +13,33 @@
             <h2>Orders Column</h2>
             
             {% for item in orders %}
-                <div class="orders-card">
-                    <form action="/change_order" method="post" class="orders-coloumn-form">
-                        <input type="hidden" name="order_id" value={{ item[0] }}>
+                {% if item[2] == 1: %}
+                    <div class="ready-orders-card">
+                        <form action="/change_order" method="post" class="orders-coloumn-form">
+                            <input type="hidden" name="order_id" value={{ item[0] }}>
 
-                        <div class="button-container">
-                            <h3>{{ item[1] }}</h3>
-                            <button type="submit" name="change" value="delete" class="order-coloumn-delete">Delete</button>
-                            <button type="submit" name="change" value="ready" class="order-coloumn-ready">Ready</button>
-                        </div>
+                            <div class="button-container">
+                                <h3>{{ item[1] }}</h3>
+                                <button type="submit" name="change" value="delete" class="order-coloumn-delete">Delete</button>
+                                <button type="submit" name="change" value="ready" class="order-coloumn-ready">Ready</button>
+                            </div>
 
-                    </form>
-                </div>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="orders-card">
+                        <form action="/change_order" method="post" class="orders-coloumn-form">
+                            <input type="hidden" name="order_id" value={{ item[0] }}>
+
+                            <div class="button-container">
+                                <h3>{{ item[1] }}</h3>
+                                <button type="submit" name="change" value="delete" class="order-coloumn-delete">Delete</button>
+                                <button type="submit" name="change" value="ready" class="order-coloumn-ready">Ready</button>
+                            </div>
+
+                        </form>
+                    </div>
+                {% endif %}
             {% endfor %}
 
         </div>
