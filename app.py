@@ -40,8 +40,8 @@ def emit_order_update():
     ready = query_db("SELECT id, number, status FROM Sales WHERE status = 1 ORDER BY id")
 
     socketio.emit('order_update', {
-        'not_ready_orders': [{'id': row['id'], 'number': row['number']} for row in not_ready],
-        'ready_orders': [{'id': row['id'], 'number': row['number']} for row in ready]
+        'not_ready_sales': [{'id': row['id'], 'number': row['number']} for row in not_ready],
+        'ready_sales': [{'id': row['id'], 'number': row['number']} for row in ready]
     })
 
 @app.route("/")
@@ -58,7 +58,7 @@ def customer_screen():
     not_ready = query_db("SELECT id, number, status FROM Sales WHERE status IS NULL ORDER BY id")
     ready = query_db("SELECT id, number, status FROM Sales WHERE status = 1 ORDER BY id")
 
-    return render_template("customer_screen.html", not_ready_orders=not_ready, ready_orders=ready)
+    return render_template("customer_screen.html", not_ready_sales=not_ready, ready_sales=ready)
 
 
 @app.post("/change_order")
