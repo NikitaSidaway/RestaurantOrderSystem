@@ -36,18 +36,18 @@ def query_db(query, args=(), one=False, commit=False):
 
 
 def emit_order_update():
-    not_ready = query_db("SELECT id, order_number, status FROM Orders WHERE status IS NULL ORDER BY id")
-    ready = query_db("SELECT id, order_number, status FROM Orders WHERE status = 1 ORDER BY id")
+    not_ready = query_db("SELECT id, number, status FROM Sales WHERE status IS NULL ORDER BY id")
+    ready = query_db("SELECT id, number, status FROM Sales WHERE status = 1 ORDER BY id")
 
     socketio.emit('order_update', {
-        'not_ready_orders': [{'id': row['id'], 'order_number': row['order_number']} for row in not_ready],
-        'ready_orders': [{'id': row['id'], 'order_number': row['order_number']} for row in ready]
+        'not_ready_orders': [{'id': row['id'], 'number': row['number']} for row in not_ready],
+        'ready_orders': [{'id': row['id'], 'number': row['number']} for row in ready]
     })
 
 @app.route("/")
 def cashier_screen():
 
-    orders = query_db("SELECT id, order_number, status FROM Orders ORDER BY id")
+    orders = query_db("SELECT id, number, status FROM Sales ORDER BY id")
 
     return render_template("cashier_screen.html", orders=orders)
 
@@ -55,8 +55,8 @@ def cashier_screen():
 @app.route("/customer_screen")
 def customer_screen():
 
-    not_ready = query_db("SELECT id, order_number, status FROM Orders WHERE status IS NULL ORDER BY id")
-    ready = query_db("SELECT id, order_number, status FROM Orders WHERE status = 1 ORDER BY id")
+    not_ready = query_db("SELECT id, number, status FROM Sales WHERE status IS NULL ORDER BY id")
+    ready = query_db("SELECT id, number, status FROM Sales WHERE status = 1 ORDER BY id")
 
     return render_template("customer_screen.html", not_ready_orders=not_ready, ready_orders=ready)
 
@@ -69,13 +69,13 @@ def change_order():
     
     if request_change == "delete":
 
-        sql_order_change = ("DELETE FROM Orders WHERE id = (?);")
+        sql_order_change = ("DELETE FROM Sales WHERE id = (?);")
         query_db(sql_order_change, (order_id,))
         get_db().commit()
 
     elif request_change == "ready":
         
-        sql_order_change = ("UPDATE Orders SET status = 1 WHERE id = (?);")
+        sql_order_change = ("UPDATE Sales SET status = 1 WHERE id = (?);")
         query_db(sql_order_change, (order_id,))
         get_db().commit()
 
@@ -88,7 +88,7 @@ def change_order():
 def order_numpad():
     order_number = request.form["order_number"]
 
-    sql_order_number = ("INSERT INTO Orders (order_number) VALUES (?);")
+    sql_order_number = ("INSERT INTO Sales (number) VALUES (?);")
 
 
     query_db(sql_order_number, (order_number,))

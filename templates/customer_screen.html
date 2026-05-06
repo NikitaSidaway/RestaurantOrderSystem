@@ -12,8 +12,7 @@
         <div class="preparing-column">
             <h4>Preparing..</h4>
             <div id="preparing-list">
-                <!-- Initial static render (optional, JS will replace) -->
-                {% for item in not_ready_orders %}
+                {% for item in not_ready_sales %}
                     <div class="display-card">
                         <h5>{{ item[1] }}</h5>
                     </div>
@@ -23,8 +22,7 @@
         <div class="please-collect-column">
             <h4>Please Collect..</h4>
             <div id="ready-list">
-                <!-- Initial static render (optional, JS will replace) -->
-                {% for item in ready_orders %}
+                {% for item in ready_sales %}
                     <div class="display-card">
                         <h5>{{ item[1] }}</h5>
                     </div>
@@ -43,25 +41,25 @@
             // Update the "Preparing.." list
             const preparingList = document.getElementById('preparing-list');
             preparingList.innerHTML = '';  // Clear existing items
-            data.not_ready_orders.forEach(order => {
+            data.not_ready_sales.forEach(order => {
                 const card = document.createElement('div');
                 card.className = 'display-card';
-                card.innerHTML = `<h5>${order.order_number}</h5>`;
+                card.innerHTML = `<h5>${order.number}</h5>`;
                 preparingList.appendChild(card);
             });
 
             // Update the "Please Collect.." list
             const readyList = document.getElementById('ready-list');
             readyList.innerHTML = '';  // Clear existing items
-            data.ready_orders.forEach(order => {
+            data.ready_sales.forEach(order => {
                 const card = document.createElement('div');
                 card.className = 'display-card';
-                card.innerHTML = `<h5>${order.order_number}</h5>`;
+                card.innerHTML = `<h5>${order.number}</h5>`;
                 readyList.appendChild(card);
             });
         });
 
-        // Optional: Log connection status for debugging
+        // Log connection status for debugging
         socket.on('connect', function() {
             console.log('Connected to server');
         });
