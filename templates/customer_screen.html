@@ -37,24 +37,24 @@
     <script>
         const socket = io();
 
-        socket.on('order_update', function(data) {
+        socket.on('sale_update', function(data) {
             // Update the "Preparing.." list
             const preparingList = document.getElementById('preparing-list');
             preparingList.innerHTML = '';  // Clear existing items
-            data.not_ready_sales.forEach(order => {
+            data.not_ready_sales.forEach(sale => {
                 const card = document.createElement('div');
                 card.className = 'display-card';
-                card.innerHTML = `<h5>${order.number}</h5>`;
+                card.innerHTML = `<h5>${sale.number}</h5>`;
                 preparingList.appendChild(card);
             });
 
             // Update the "Please Collect.." list
             const readyList = document.getElementById('ready-list');
             readyList.innerHTML = '';  // Clear existing items
-            data.ready_sales.forEach(order => {
+            data.ready_sales.forEach(sale => {
                 const card = document.createElement('div');
                 card.className = 'display-card';
-                card.innerHTML = `<h5>${order.number}</h5>`;
+                card.innerHTML = `<h5>${sale.number}</h5>`;
                 readyList.appendChild(card);
             });
         });

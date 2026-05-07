@@ -9,32 +9,32 @@
 
 <body>
     <div class="two-column">
-        <div class="order-column">
-            <h2>Orders Column</h2>
+        <div class="sale-column">
+            <h2>Sales Column</h2>
             
-            {% for item in orders %}
+            {% for item in sales %}
                 {% if item[2] == 1: %}
-                    <div class="ready-orders-card">
-                        <form action="/change_order" method="post" class="orders-coloumn-form">
-                            <input type="hidden" name="order_id" value={{ item[0] }}>
+                    <div class="ready-sales-card">
+                        <form action="/change_sale" method="post" class="sales-coloumn-form">
+                            <input type="hidden" name="sale_id" value={{ item[0] }}>
 
                             <div class="button-container">
                                 <h3>{{ item[1] }}</h3>
-                                <button type="submit" name="change" value="delete" class="order-coloumn-delete">Delete</button>
-                                <button type="submit" name="change" value="ready" class="order-coloumn-ready">Ready</button>
+                                <button type="submit" name="change" value="delete" class="sale-coloumn-delete">Delete</button>
+                                <button type="submit" name="change" value="ready" class="sale-coloumn-ready">Ready</button>
                             </div>
 
                         </form>
                     </div>
                 {% else %}
-                    <div class="orders-card">
-                        <form action="/change_order" method="post" class="orders-coloumn-form">
-                            <input type="hidden" name="order_id" value={{ item[0] }}>
+                    <div class="sales-card">
+                        <form action="/change_sale" method="post" class="sales-coloumn-form">
+                            <input type="hidden" name="sale_id" value={{ item[0] }}>
 
                             <div class="button-container">
                                 <h3>{{ item[1] }}</h3>
-                                <button type="submit" name="change" value="delete" class="order-coloumn-delete">Delete</button>
-                                <button type="submit" name="change" value="ready" class="order-coloumn-ready">Ready</button>
+                                <button type="submit" name="change" value="delete" class="sale-coloumn-delete">Delete</button>
+                                <button type="submit" name="change" value="ready" class="sale-coloumn-ready">Ready</button>
                             </div>
 
                         </form>
@@ -44,9 +44,9 @@
 
         </div>
         <div class="numpad-column">
-            <form action="/add_order" method="post" class="numpad-form">
+            <form action="/add_sale" method="post" class="numpad-form">
                 
-                <input type="text" id="display" name="order_number" class="numpad-input" readonly>
+                <input type="text" id="display" name="sale_number" class="numpad-input" readonly>
 
                 <div class="numpad">
 

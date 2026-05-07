@@ -35,11 +35,11 @@ def query_db(query, args=(), one=False, commit=False):
 
 
 
-def emit_order_update():
+def emit_sale_update():
     not_ready = query_db("SELECT id, number, status FROM Sales WHERE status IS NULL ORDER BY id")
     ready = query_db("SELECT id, number, status FROM Sales WHERE status = 1 ORDER BY id")
 
-    socketio.emit('order_update', {
+    socketio.emit('sale_update', {
         'not_ready_sales': [{'id': row['id'], 'number': row['number']} for row in not_ready],
         'ready_sales': [{'id': row['id'], 'number': row['number']} for row in ready]
     })
@@ -47,9 +47,9 @@ def emit_order_update():
 @app.route("/")
 def cashier_screen():
 
-    orders = query_db("SELECT id, number, status FROM Sales ORDER BY id")
+    sales = query_db("SELECT id, number, status FROM Sales ORDER BY id")
 
-    return render_template("cashier_screen.html", orders=orders)
+    return render_template("cashier_screen.html", sales=sales)
 
 
 @app.route("/customer_screen")
@@ -61,47 +61,47 @@ def customer_screen():
     return render_template("customer_screen.html", not_ready_sales=not_ready, ready_sales=ready)
 
 
-@app.post("/change_order")
-def change_order():
+@app.post("/change_sale")
+def change_sale():
     print("test")
     request_change = request.form.get("change")
-    order_id = request.form.get("order_id")
+    sale_id = request.form.get("sale_id")
     
     if request_change == "delete":
 
-        sql_order_change = ("DELETE FROM Sales WHERE id = (?);")
-        query_db(sql_order_change, (order_id,))
+        sql_sale_change = ("DELETE FROM Sales WHERE id = (?);")
+        query_db(sql_sale_change, (sale_id,))
         get_db().commit()
 
     elif request_change == "ready":
         
-        sql_order_change = ("UPDATE Sales SET status = 1 WHERE id = (?);")
-        query_db(sql_order_change, (order_id,))
+        sql_sale_change = ("UPDATE Sales SET status = 1 WHERE id = (?);")
+        query_db(sql_sale_change, (sale_id,))
         get_db().commit()
 
-    emit_order_update()
+    emit_sale_update()
 
     return redirect('/')
 
 
-@app.post("/add_order")
-def order_numpad():
-    order_number = request.form["order_number"]
+@app.post("/add_sale")
+def sale_numpad():
+    sale_number = request.form["sale_number"]
 
-    sql_order_number = ("INSERT INTO Sales (number) VALUES (?);")
+    sql_sale_number = ("INSERT INTO Sales (number) VALUES (?);")
 
 
-    query_db(sql_order_number, (order_number,))
+    query_db(sql_sale_number, (sale_number,))
 
     get_db().commit()
 
-    emit_order_update()
+    emit_sale_update()
 
     return redirect('/')
 
 @socketio.on('connect')
 def handle_connect():
     print('Client connected')
-    emit_order_update()
+    emit_sale_update()
 if __name__ == '__main__':
     socketio.run(app, debug=True)
