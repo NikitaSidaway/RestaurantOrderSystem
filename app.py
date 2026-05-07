@@ -61,6 +61,11 @@ def customer_screen():
     return render_template("customer_screen.html", not_ready_sales=not_ready, ready_sales=ready)
 
 
+@app.route("/kitchen_screen")
+def kitchen_screen():
+    return render_template("kitchen_screen.html")
+
+
 @app.post("/change_sale")
 def change_sale():
     print("test")
