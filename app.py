@@ -63,7 +63,30 @@ def customer_screen():
 
 @app.route("/kitchen_screen")
 def kitchen_screen():
-    return render_template("kitchen_screen.html")
+
+    sqlquery = """SELECT 
+        Sales.number AS sale_number,
+        Sales.status AS sale_status,
+        Items.name AS item_name
+    FROM Sales
+    JOIN SaleItem ON Sales.id = SaleItem.sale_id
+    JOIN Items ON SaleItem.item_id = Items.id
+    ORDER BY Sales.number, Items.name;"""
+    results = query_db(sqlquery)
+
+    grouped_sales = {}
+    for row in results:
+        sale_num = row["sale_number"]
+
+        if sale_num not in grouped_sales:
+            grouped_sales[sale_num] = {
+                "status" : row["sale_status"],
+                "items" : []
+            }
+        
+        grouped_sales[sale_num]["items"].append(row['item_name'])
+
+    return render_template("kitchen_screen.html", sales=grouped_sales)
 
 
 @app.post("/change_sale")
