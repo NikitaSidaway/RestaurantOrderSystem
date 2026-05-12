@@ -4,19 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kitchen Screen</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='kitchenstyle.css') }}">
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 <body>
-    {% for sale_num, details in sales.items() %}
-        <h1>Order #{{ sale_num }}</h1>
-        {% if details.status is none %}
-            <h1>Status: Not Ready</h1>
-        {% else %}
-            <h1>Status: Ready</h1>
-        {% endif %}
-        {% for item in details['items'] %}
-            <h1>{{ item }}</h1>
+    <div class="kitchen-container">
+        {% for sale_num, details in sales.items() %}
+            <div class="kitchen-card">
+                <h1>Order #{{ sale_num }}</h1>
+                {% if details.status is none %}
+                    <h1>Status: Not Ready</h1>
+                {% else %}
+                    <h1>Status: Ready</h1>
+                {% endif %}
+                {% for item in details['items'] %}
+                    <h1>{{ item }}</h1>
+                {% endfor %}
+            </div>
         {% endfor %}
-    {% endfor %}
+    </div>
 </body>

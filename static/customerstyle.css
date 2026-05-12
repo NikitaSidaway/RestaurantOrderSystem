@@ -1,0 +1,86 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+*:not(dialog) {
+  margin: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+  }
+}
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+input, button, textarea, select {
+  font: inherit;
+}
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+p {
+  text-wrap: pretty;
+}
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+#root, #__next {
+  isolation: isolate;
+}
+
+
+
+
+h4 {
+  text-align: center;
+  font-size: 120px;
+}
+
+h5 {
+  text-align: center;
+  font-size: 100px;
+}
+
+.customer-screen-container {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+
+.preparing-column {
+  margin-top: 75px;
+  flex: 1;
+}
+
+.please-collect-column {
+  margin-top: 75px;
+  flex: 1;
+}
+
+.image-column {
+  flex: 1;
+}
+
+.display-card {
+  box-shadow: 0 15px 30px 0 rgba(0,0,0,0.2);
+  width: 900px;
+  border-radius: 25px;
+  margin: auto;
+  height: auto;
+  margin-bottom: 35px;
+  padding: 20px;
+}
+
+.display-image {
+  box-shadow: 0 15px 30px 0 rgba(0,0,0,0.2);
+  width: 900px;
+  border-radius: 25px;
+  margin: 175px auto;
+  height: 1810px;
+}
+
