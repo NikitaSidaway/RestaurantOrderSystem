@@ -36,7 +36,15 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
-.kitchen-container {
+.page-wrapper {
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.container {
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 300px;
@@ -45,8 +53,15 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 100%
 }
 
-.kitchen-card {
+.card {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-
   border-radius: 5px;
+}
+
+.card-header {
+    background-color: #FF8989;
+}
+
+.ready-card-header {
+    background-color: #A7D477;
 }

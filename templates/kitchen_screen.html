@@ -8,19 +8,26 @@
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 <body>
-    <div class="kitchen-container">
-        {% for sale_num, details in sales.items() %}
-            <div class="kitchen-card">
-                <h1>Order #{{ sale_num }}</h1>
-                {% if details.status is none %}
-                    <h1>Status: Not Ready</h1>
-                {% else %}
-                    <h1>Status: Ready</h1>
-                {% endif %}
-                {% for item in details['items'] %}
-                    <h1>{{ item }}</h1>
-                {% endfor %}
-            </div>
-        {% endfor %}
+    <div class="page-wrapper">
+        <div class="container">
+            {% for sale_num, details in sales.items() %}
+                <div class="card">
+                    {% if details.status is none %}
+                        <div class="card-header">
+                            <h1>Order #{{ sale_num }}</h1>
+                        </div>
+                        <h2>Status: Not Ready</h2>
+                    {% else %}
+                        <div class="ready-card-header">
+                            <h1>Order #{{ sale_num }}</h1>
+                        </div>
+                        <h2>Status: Ready</h2>
+                    {% endif %}
+                    {% for item in details['items'] %}
+                        <h2>{{ item }}</h2>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </body>
