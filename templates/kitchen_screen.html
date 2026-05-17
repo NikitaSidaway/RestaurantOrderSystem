@@ -6,6 +6,7 @@
     <title>Kitchen Screen</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='kitchenstyle.css') }}">
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://kit.fontawesome.com/34724dd888.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="page-wrapper">
@@ -24,7 +25,15 @@
                         <h2>Status: Ready</h2>
                     {% endif %}
                     {% for item in details['items'] %}
-                        <h2>{{ item }}</h2>
+                        {% if item['status'] is none %}
+                            <i class="fa-regular fa-circle-check"></i>
+                            <h2 style="display: inline-block; vertical-align: middle;">{{ item['name'] }}</h2>
+                            <br>
+                        {% else %}
+                            <i class="fa-solid fa-circle-check"></i>
+                            <h2 style="display: inline-block; vertical-align: middle;">{{ item['name'] }}</h2>
+                            <br>
+                        {% endif %}
                     {% endfor %}
                 </div>
             {% endfor %}

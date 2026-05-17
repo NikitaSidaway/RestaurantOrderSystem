@@ -67,7 +67,8 @@ def kitchen_screen():
     sqlquery = """SELECT 
         Sales.number AS sale_number,
         Sales.status AS sale_status,
-        Items.name AS item_name
+        Items.name AS item_name,
+        SaleItem.status AS item_status
     FROM Sales
     JOIN SaleItem ON Sales.id = SaleItem.sale_id
     JOIN Items ON SaleItem.item_id = Items.id
@@ -84,7 +85,10 @@ def kitchen_screen():
                 "items" : []
             }
         
-        grouped_sales[sale_num]["items"].append(row['item_name'])
+        grouped_sales[sale_num]["items"].append({
+            "name": row["item_name"],
+            "status": row["item_status"]
+        })
 
     return render_template("kitchen_screen.html", sales=grouped_sales)
 

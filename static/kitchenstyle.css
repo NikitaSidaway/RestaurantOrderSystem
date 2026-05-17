@@ -37,11 +37,11 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .page-wrapper {
-    margin: 20px;
+  margin: 20px;
 }
 
 h1 {
-    text-align: center;
+  text-align: center;
 }
 
 .container {
@@ -59,9 +59,10 @@ h1 {
 }
 
 .card-header {
-    background-color: #FF8989;
+  background-color: #FF8989;
 }
 
 .ready-card-header {
-    background-color: #A7D477;
+  background-color: #A7D477;
+  border-radius: 5px 5px 0px 0px;
 }
