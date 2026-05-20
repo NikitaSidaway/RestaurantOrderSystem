@@ -51,6 +51,22 @@ def cashier_screen():
 
     return render_template("cashier_screen.html", sales=sales)
 
+@app.route("/cashier_screen")
+def new_cashier_screen():
+
+    sqlquery = """SELECT
+        i.name AS item_name,
+        i.price AS price,
+        c.name AS category_name
+    FROM
+        items i
+    JOIN
+        categories c ON p.category = c.d;
+    """
+    items = query_db("SELECT name, price, category FROM Items")
+
+    return render_template("new_cashier_screen.html", items=items)
+
 
 @app.route("/customer_screen")
 def customer_screen():
@@ -84,7 +100,7 @@ def kitchen_screen():
                 "status" : row["sale_status"],
                 "items" : []
             }
-        
+
         grouped_sales[sale_num]["items"].append({
             "name": row["item_name"],
             "status": row["item_status"]
