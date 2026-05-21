@@ -35,5 +35,21 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .page-wrapper {
-    margin: 20px;
+  margin: 20px;
+}
+
+.item_container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 20px;
+}
+
+.item_card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border-radius: 5px;
+}
+
+.item_image {
+  width: 200px;
+  height: 200px;
 }

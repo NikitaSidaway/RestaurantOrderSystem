@@ -54,18 +54,23 @@ def cashier_screen():
 @app.route("/cashier_screen")
 def new_cashier_screen():
 
-    sqlquery = """SELECT
+    items_query = """SELECT
         i.name AS item_name,
         i.price AS price,
+        i.category AS category,
         c.name AS category_name
     FROM
         items i
     JOIN
-        categories c ON p.category = c.d;
+        categories c ON i.category = c.id;
     """
-    items = query_db("SELECT name, price, category FROM Items")
 
-    return render_template("new_cashier_screen.html", items=items)
+    categories_query = "SELECT id, name FROM Categories;"
+
+    items = query_db(items_query)
+    categories = query_db(categories_query)
+
+    return render_template("new_cashier_screen.html", items=items, categories=categories)
 
 
 @app.route("/customer_screen")

@@ -9,8 +9,24 @@
 </head>
 <body>
     <div class="page-wrapper">
-        <div class="category-column">
-            <h1>test</h1>
+        <div class="items-column">
+
+            {% for category in categories %}
+                <h1>{{ category["name"] }}</h1>
+
+                {% for item in items %}
+
+                    {% if item["category"] == category["id"] %}
+                        <div class="item_container">
+                            <div class="item_card">
+                                <img class="item_image" src="{{ url_for('static', filename='images/placeholder.png') }}" alt="item_image">
+                                <h2>{{ item["item_name"] }}</h2>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                {% endfor %}
+            {% endfor %}
         </div>
     </div>
 </body>
