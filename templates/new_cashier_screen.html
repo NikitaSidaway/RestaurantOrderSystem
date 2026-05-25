@@ -13,19 +13,18 @@
 
             {% for category in categories %}
                 <h1>{{ category["name"] }}</h1>
-
+                <div class="item_container">
                 {% for item in items %}
 
                     {% if item["category"] == category["id"] %}
-                        <div class="item_container">
-                            <div class="item_card">
-                                <img class="item_image" src="{{ url_for('static', filename='images/placeholder.png') }}" alt="item_image">
-                                <h2>{{ item["item_name"] }}</h2>
-                            </div>
+                        <div class="item_card">
+                            <img class="item_image" src="{{ url_for('static', filename='images/placeholder.png') }}" alt="item_image">
+                            <h2>{{ item["item_name"] }}</h2>
                         </div>
                     {% endif %}
-
+                
                 {% endfor %}
+                </div>
             {% endfor %}
         </div>
     </div>
