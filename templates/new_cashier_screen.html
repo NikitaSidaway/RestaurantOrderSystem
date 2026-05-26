@@ -9,6 +9,7 @@
 </head>
 <body>
     <div class="page-wrapper">
+
         <div class="items-column">
 
             {% for category in categories %}
@@ -17,15 +18,61 @@
                 {% for item in items %}
 
                     {% if item["category"] == category["id"] %}
-                        <div class="item_card">
+                        <div class="item_card"
+                            data-item-id="{{ item['item_id'] }}"
+                            data-item-name="{{ item['item_name'] }}"
+                            data-item-price="{{ item['price'] }}">
                             <img class="item_image" src="{{ url_for('static', filename='images/placeholder.png') }}" alt="item_image">
                             <h2>{{ item["item_name"] }}</h2>
-                        </div>
+                            <h3>${{ "%.2f"|format(item["price"]) }}</h3>
+                         </div>
                     {% endif %}
                 
                 {% endfor %}
                 </div>
             {% endfor %}
         </div>
+
+        <div class="order-column">
+            <h1>Cart</h1>
+            <div id="cart">
+                <ul id="cart-list"></ul>
+                <div id="cart-total">Total : $0.00</div>
+                <button id="cart-clear" type="button">Clear</button>
+            </div>
+        </div>
+
+        <script>
+        (function(){
+        const cart = {};
+        const list = document.getElementById("cart-list");
+        const totalEl = document.getElementById("cart-total");
+
+        function render(){
+            list.innerHTML = Object.keys(cart).map(id => {
+            const it = cart[id];
+            return `<li>${it.name} × ${it.qty} - $${(it.price * it.qty).toFixed(2)}</li>`;
+            }).join("");
+            const total = Object.values(cart).reduce((s, it) => s + it.price * it.qty, 0);
+            totalEl.textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        document.addEventListener("click", e => {
+            const card = e.target.closest(".item_card");
+            if (!card) return;
+            const id = card.dataset.itemId;
+            const name = card.dataset.itemName;
+            const price = parseFloat(card.dataset.itemPrice) || 0;
+            if (!cart[id]) cart[id] = { id, name, price, qty: 0 };
+            cart[id].qty += 1;
+            render();
+        });
+
+        document.getElementById('cart-clear')?.addEventListener("click", () => {
+            for (const k in cart) delete cart[k];
+            render();
+        });
+        })();
+        </script>
     </div>
 </body>
