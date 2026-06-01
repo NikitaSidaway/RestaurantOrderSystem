@@ -55,6 +55,7 @@ def cashier_screen():
 def new_cashier_screen():
 
     items_query = """SELECT
+        i.id AS item_id,
         i.name AS item_name,
         i.price AS price,
         i.category AS category,
