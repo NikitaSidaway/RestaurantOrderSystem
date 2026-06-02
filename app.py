@@ -77,7 +77,26 @@ def new_cashier_screen():
 def sumbit_cart():
     cart = request.get_json()
 
-    return redirect("/cashier_screen")
+    last = query_db("SELECT MAX(number) AS max_number FROM Sales;", one=True)
+    current = last["max_number"] or 0
+    next_number = current + 1
+    if next_number > 100:
+        next_number = 1
+
+    sale_id = query_db(
+        "INSERT INTO Sales (number) VALUES (?)",
+        (next_number,),
+        commit=True
+    ) 
+
+    for item_id, item in cart.items():
+        qty = item.get("qty", 1)
+        query_db(
+        "INSERT INTO SaleItem (sale_id, item_id, status, quantity) VALUES (?, ?, ?, ?);",
+        (sale_id, item_id, None, qty),
+        commit=True
+        )
+    return {"status": "ok"}
 
 
 @app.route("/customer_screen")

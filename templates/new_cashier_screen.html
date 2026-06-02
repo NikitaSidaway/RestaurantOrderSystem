@@ -39,6 +39,7 @@
                 <ul id="cart-list"></ul>
                 <div id="cart-total">Total : $0.00</div>
                 <button id="cart-clear" type="button">Clear</button>
+                <button id="cart-submit" type="button">Submit</button>
             </div>
         </div>
 
@@ -73,6 +74,24 @@
             render();
         });
         })();
+
+        document.GetElementById("cart-submit")?.addEventListener("click", async () => {
+            if (Object.keys(cart).length === 0) return;
+
+            const response = await fetch('/submit_cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cart)
+            });
+
+            if (response.ok) {
+                for (const k in cart) delete cart[k];
+                render();
+                window.location.href = "/cashier)screen";
+            } else {
+                console.error("Cart submit failed", await response.text());
+            }
+        });
         </script>
     </div>
 </body>
