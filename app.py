@@ -73,6 +73,12 @@ def new_cashier_screen():
 
     return render_template("new_cashier_screen.html", items=items, categories=categories)
 
+@app.post("/submit_cart")
+def sumbit_cart():
+    cart = request.get_json()
+
+    return redirect("/cashier_screen")
+
 
 @app.route("/customer_screen")
 def customer_screen():
@@ -90,7 +96,8 @@ def kitchen_screen():
         Sales.number AS sale_number,
         Sales.status AS sale_status,
         Items.name AS item_name,
-        SaleItem.status AS item_status
+        SaleItem.status AS item_status,
+        SaleItem.quantity AS item_quantity
     FROM Sales
     JOIN SaleItem ON Sales.id = SaleItem.sale_id
     JOIN Items ON SaleItem.item_id = Items.id
@@ -100,6 +107,7 @@ def kitchen_screen():
     grouped_sales = {}
     for row in results:
         sale_num = row["sale_number"]
+        quantity = row["item_quantity"] or 1
 
         if sale_num not in grouped_sales:
             grouped_sales[sale_num] = {
@@ -107,10 +115,11 @@ def kitchen_screen():
                 "items" : []
             }
 
-        grouped_sales[sale_num]["items"].append({
-            "name": row["item_name"],
-            "status": row["item_status"]
-        })
+        for _ in range(quantity):
+            grouped_sales[sale_num]["items"].append({
+                "name": row["item_name"],
+                "status": row["item_status"]
+            })
 
     return render_template("kitchen_screen.html", sales=grouped_sales)
 
