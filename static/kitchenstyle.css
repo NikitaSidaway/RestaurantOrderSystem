@@ -60,9 +60,25 @@ h1 {
 
 .card-header {
   background-color: #FF8989;
+  border-radius: 5px 5px 0px 0px;
 }
 
 .ready-card-header {
   background-color: #A7D477;
   border-radius: 5px 5px 0px 0px;
+}
+
+.card-body {
+  padding: 10px;
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 7px;
+}
+
+.item-row h2 {
+  display: inline-block;
 }

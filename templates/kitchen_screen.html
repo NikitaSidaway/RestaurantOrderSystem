@@ -17,24 +17,24 @@
                         <div class="card-header">
                             <h1>Order #{{ sale_num }}</h1>
                         </div>
-                        <h2>Status: Not Ready</h2>
                     {% else %}
                         <div class="ready-card-header">
                             <h1>Order #{{ sale_num }}</h1>
                         </div>
-                        <h2>Status: Ready</h2>
                     {% endif %}
-                    {% for item in details['items'] %}
-                        {% if item['status'] is none %}
-                            <i class="fa-regular fa-circle-check"></i>
-                            <h2 style="display: inline-block; vertical-align: middle;">{{ item['name'] }}</h2>
-                            <br>
-                        {% else %}
-                            <i class="fa-solid fa-circle-check"></i>
-                            <h2 style="display: inline-block; vertical-align: middle;">{{ item['name'] }}</h2>
-                            <br>
-                        {% endif %}
-                    {% endfor %}
+
+                    <div class="card-body">
+                        {% for item in details['items'] %}
+                            <div class="item-row">
+                                {% if item['status'] is none %}
+                                    <i class="fa-regular fa-circle-check"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-circle-check"></i>
+                                {% endif %}
+                                <h2>{{ item['name'] }}</h2>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             {% endfor %}
         </div>
