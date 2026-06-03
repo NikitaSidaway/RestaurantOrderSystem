@@ -73,9 +73,8 @@
             for (const k in cart) delete cart[k];
             render();
         });
-        })();
 
-        document.GetElementById("cart-submit")?.addEventListener("click", async () => {
+        document.getElementById("cart-submit")?.addEventListener("click", async () => {
             if (Object.keys(cart).length === 0) return;
 
             const response = await fetch('/submit_cart', {
@@ -87,11 +86,12 @@
             if (response.ok) {
                 for (const k in cart) delete cart[k];
                 render();
-                window.location.href = "/cashier)screen";
+                window.location.href = "/cashier_screen";
             } else {
                 console.error("Cart submit failed", await response.text());
             }
         });
+        })();
         </script>
     </div>
 </body>

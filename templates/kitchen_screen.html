@@ -11,26 +11,25 @@
 <body>
     <div class="page-wrapper">
         <div class="container">
-            {% for sale_num, details in sales.items() %}
+            {% for sale_id, details in sales.items() %}
                 <div class="card">
                     {% if details.status is none %}
                         <div class="card-header">
-                            <h1>Order #{{ sale_num }}</h1>
+                            <h1>Order #{{ details.sale_number }}</h1>
                         </div>
                     {% else %}
                         <div class="ready-card-header">
-                            <h1>Order #{{ sale_num }}</h1>
+                            <h1>Order #{{ details.sale_number }}</h1>
                         </div>
                     {% endif %}
 
                     <div class="card-body">
                         {% for item in details['items'] %}
-                            <div class="item-row">
-                                {% if item['status'] is none %}
-                                    <i class="fa-regular fa-circle-check"></i>
-                                {% else %}
-                                    <i class="fa-solid fa-circle-check"></i>
-                                {% endif %}
+                            <div class="item-row{% if item['status'] is not none %} ready{% else %} unready{% endif %}"
+                                 data-sale-id="{{ sale_id }}"
+                                 data-item-id="{{ item['item_id'] }}"
+                                 data-ready="{{ 1 if item['status'] is not none else 0 }}">
+                                <span class="check-icon"></span>
                                 <h2>{{ item['name'] }}</h2>
                             </div>
                         {% endfor %}
@@ -39,4 +38,42 @@
             {% endfor %}
         </div>
     </div>
+
+    <script>
+    document.addEventListener('click', event => {
+        const row = event.target.closest('.item-row');
+        if (!row) return;
+
+        const saleId = row.dataset.saleId;
+        const itemId = row.dataset.itemId;
+        const isReady = row.classList.contains('ready');
+        const nextStatus = isReady ? 0 : 1;
+
+        fetch('/item_status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sale_id: saleId, item_id: itemId, status: nextStatus })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status !== 'ok') throw new Error('Update failed');
+
+            row.classList.toggle('ready', nextStatus === 1);
+            row.classList.toggle('unready', nextStatus === 0);
+            row.dataset.ready = nextStatus;
+
+            const card = row.closest('.card');
+            if (card) {
+                const header = card.querySelector('.card-header, .ready-card-header');
+                if (header) {
+                    header.classList.toggle('ready-card-header', data.order_ready);
+                    header.classList.toggle('card-header', !data.order_ready);
+                }
+            }
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    });
+    </script>
 </body>

@@ -112,8 +112,10 @@ def customer_screen():
 def kitchen_screen():
 
     sqlquery = """SELECT 
+        Sales.id AS sale_id,
         Sales.number AS sale_number,
         Sales.status AS sale_status,
+        Items.id AS item_id,
         Items.name AS item_name,
         SaleItem.status AS item_status,
         SaleItem.quantity AS item_quantity
@@ -125,22 +127,56 @@ def kitchen_screen():
 
     grouped_sales = {}
     for row in results:
-        sale_num = row["sale_number"]
+        sale_id = row["sale_id"]
         quantity = row["item_quantity"] or 1
 
-        if sale_num not in grouped_sales:
-            grouped_sales[sale_num] = {
+        if sale_id not in grouped_sales:
+            grouped_sales[sale_id] = {
+                "sale_number": row["sale_number"],
                 "status" : row["sale_status"],
                 "items" : []
             }
 
         for _ in range(quantity):
-            grouped_sales[sale_num]["items"].append({
+            grouped_sales[sale_id]["items"].append({
+                "item_id": row["item_id"],
                 "name": row["item_name"],
                 "status": row["item_status"]
             })
 
     return render_template("kitchen_screen.html", sales=grouped_sales)
+
+
+@app.post("/item_status")
+def item_status():
+    data = request.get_json() or {}
+    sale_id = data.get("sale_id")
+    item_id = data.get("item_id")
+    status = data.get("status")
+
+    if sale_id is None or item_id is None or status is None:
+        return {"status": "error", "message": "Missing sale_id, item_id, or status"}, 400
+
+    status_value = 1 if int(status) == 1 else None
+    query_db(
+        "UPDATE SaleItem SET status = ? WHERE sale_id = ? AND item_id = ?;",
+        (status_value, sale_id, item_id),
+        commit=True
+    )
+
+    unready = query_db(
+        "SELECT COUNT(*) AS count FROM SaleItem WHERE sale_id = ? AND status IS NULL;",
+        (sale_id,), one=True
+    )
+
+    if unready["count"] == 0:
+        query_db("UPDATE Sales SET status = 1 WHERE id = ?;", (sale_id,), commit=True)
+        order_ready = True
+    else:
+        query_db("UPDATE Sales SET status = NULL WHERE id = ?;", (sale_id,), commit=True)
+        order_ready = False
+
+    return {"status": "ok", "order_ready": order_ready}
 
 
 @app.post("/change_sale")
