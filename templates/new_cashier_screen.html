@@ -87,8 +87,6 @@
                 for (const k in cart) delete cart[k];
                 render();
                 window.location.href = "/cashier_screen";
-            } else {
-                console.error("Cart submit failed", await response.text());
             }
         });
         })();
