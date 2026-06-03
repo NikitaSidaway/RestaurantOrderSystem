@@ -39,25 +39,23 @@ def emit_sale_update():
     not_ready = query_db("SELECT id, number, status FROM Sales WHERE status IS NULL ORDER BY id")
     ready = query_db("SELECT id, number, status FROM Sales WHERE status = 1 ORDER BY id")
 
-    # build detailed kitchen payload
     sql = """SELECT
         Sales.id AS sale_id,
         Sales.number AS sale_number,
         Sales.status AS sale_status,
+        SaleItem.rowid AS saleitem_rowid,
         Items.id AS item_id,
         Items.name AS item_name,
-        SaleItem.status AS item_status,
-        SaleItem.quantity AS item_quantity
+        SaleItem.status AS item_status
     FROM Sales
     JOIN SaleItem ON Sales.id = SaleItem.sale_id
     JOIN Items ON SaleItem.item_id = Items.id
-    ORDER BY Sales.number, Items.name;"""
+    ORDER BY Sales.number, SaleItem.rowid;"""
     results = query_db(sql)
 
     grouped = {}
     for row in results:
         sid = row['sale_id']
-        qty = row['item_quantity'] or 1
         if sid not in grouped:
             grouped[sid] = {
                 'sale_id': sid,
@@ -65,12 +63,12 @@ def emit_sale_update():
                 'status': row['sale_status'],
                 'items': []
             }
-        for _ in range(qty):
-            grouped[sid]['items'].append({
-                'item_id': row['item_id'],
-                'name': row['item_name'],
-                'status': row['item_status']
-            })
+        grouped[sid]['items'].append({
+            'saleitem_rowid': row['saleitem_rowid'],
+            'item_id': row['item_id'],
+            'name': row['item_name'],
+            'status': row['item_status']
+        })
 
     kitchen_sales = list(grouped.values())
 
@@ -127,11 +125,12 @@ def sumbit_cart():
 
     for item_id, item in cart.items():
         qty = item.get("qty", 1)
-        query_db(
-        "INSERT INTO SaleItem (sale_id, item_id, status, quantity) VALUES (?, ?, ?, ?);",
-        (sale_id, item_id, None, qty),
-        commit=True
-        )
+        for _ in range(qty):
+            query_db(
+            "INSERT INTO SaleItem (sale_id, item_id, status, quantity) VALUES (?, ?, ?, ?);",
+            (sale_id, item_id, None, 1),
+            commit=True
+            )
 
     emit_sale_update()
 
@@ -154,20 +153,19 @@ def kitchen_screen():
         Sales.id AS sale_id,
         Sales.number AS sale_number,
         Sales.status AS sale_status,
+        SaleItem.rowid AS saleitem_rowid,
         Items.id AS item_id,
         Items.name AS item_name,
-        SaleItem.status AS item_status,
-        SaleItem.quantity AS item_quantity
+        SaleItem.status AS item_status
     FROM Sales
     JOIN SaleItem ON Sales.id = SaleItem.sale_id
     JOIN Items ON SaleItem.item_id = Items.id
-    ORDER BY Sales.number, Items.name;"""
+    ORDER BY Sales.number, SaleItem.rowid;"""
     results = query_db(sqlquery)
 
     grouped_sales = {}
     for row in results:
         sale_id = row["sale_id"]
-        quantity = row["item_quantity"] or 1
 
         if sale_id not in grouped_sales:
             grouped_sales[sale_id] = {
@@ -176,12 +174,12 @@ def kitchen_screen():
                 "items" : []
             }
 
-        for _ in range(quantity):
-            grouped_sales[sale_id]["items"].append({
-                "item_id": row["item_id"],
-                "name": row["item_name"],
-                "status": row["item_status"]
-            })
+        grouped_sales[sale_id]["items"].append({
+            "saleitem_rowid": row["saleitem_rowid"],
+            "item_id": row["item_id"],
+            "name": row["item_name"],
+            "status": row["item_status"]
+        })
 
     return render_template("kitchen_screen.html", sales=grouped_sales)
 
@@ -192,16 +190,16 @@ def kitchen_screen():
 def item_status():
     data = request.get_json() or {}
     sale_id = data.get("sale_id")
-    item_id = data.get("item_id")
+    saleitem_rowid = data.get("saleitem_rowid")
     status = data.get("status")
 
-    if sale_id is None or item_id is None or status is None:
-        return {"status": "error", "message": "Missing sale_id, item_id, or status"}, 400
+    if sale_id is None or saleitem_rowid is None or status is None:
+        return {"status": "error", "message": "Missing sale_id, saleitem_rowid, or status"}, 400
 
     status_value = 1 if int(status) == 1 else None
     query_db(
-        "UPDATE SaleItem SET status = ? WHERE sale_id = ? AND item_id = ?;",
-        (status_value, sale_id, item_id),
+        "UPDATE SaleItem SET status = ? WHERE rowid = ?;",
+        (status_value, saleitem_rowid),
         commit=True
     )
 

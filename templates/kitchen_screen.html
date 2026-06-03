@@ -27,7 +27,7 @@
                         {% for item in details['items'] %}
                             <div class="item-row{% if item['status'] is not none %} ready{% else %} unready{% endif %}"
                                 data-sale-id="{{ sale_id }}"
-                                data-item-id="{{ item['item_id'] }}"
+                                data-saleitem-rowid="{{ item['saleitem_rowid'] }}"
                                 data-ready="{{ 1 if item['status'] is not none else 0 }}">
                                 <span class="check-icon"></span>
                                 <h2>{{ item['name'] }}</h2>
@@ -58,7 +58,7 @@
             html += `<div class="card-body">`;
             sale.items.forEach(item => {
                 const cls = item.status == null ? 'unready' : 'ready';
-                html += `<div class="item-row ${cls}" data-sale-id="${sale.sale_id}" data-item-id="${item.item_id}" data-ready="${item.status == null ? 0 : 1}"><span class="check-icon"></span><h2>${item.name}</h2></div>`;
+                html += `<div class="item-row ${cls}" data-sale-id="${sale.sale_id}" data-saleitem-rowid="${item.saleitem_rowid}" data-ready="${item.status == null ? 0 : 1}"><span class="check-icon"></span><h2>${item.name}</h2></div>`;
             });
             html += `</div></div>`;
         });
@@ -70,14 +70,14 @@
         if (!row) return;
 
         const saleId = row.dataset.saleId;
-        const itemId = row.dataset.itemId;
+        const saleitemRowid = row.dataset.saleitemRowid;
         const isReady = row.classList.contains('ready');
         const nextStatus = isReady ? 0 : 1;
 
         fetch('/item_status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sale_id: saleId, item_id: itemId, status: nextStatus })
+            body: JSON.stringify({ sale_id: saleId, saleitem_rowid: saleitemRowid, status: nextStatus })
         })
         .then(response => response.json())
         .then(data => {
