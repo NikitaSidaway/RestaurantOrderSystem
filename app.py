@@ -39,9 +39,45 @@ def emit_sale_update():
     not_ready = query_db("SELECT id, number, status FROM Sales WHERE status IS NULL ORDER BY id")
     ready = query_db("SELECT id, number, status FROM Sales WHERE status = 1 ORDER BY id")
 
+    # build detailed kitchen payload
+    sql = """SELECT
+        Sales.id AS sale_id,
+        Sales.number AS sale_number,
+        Sales.status AS sale_status,
+        Items.id AS item_id,
+        Items.name AS item_name,
+        SaleItem.status AS item_status,
+        SaleItem.quantity AS item_quantity
+    FROM Sales
+    JOIN SaleItem ON Sales.id = SaleItem.sale_id
+    JOIN Items ON SaleItem.item_id = Items.id
+    ORDER BY Sales.number, Items.name;"""
+    results = query_db(sql)
+
+    grouped = {}
+    for row in results:
+        sid = row['sale_id']
+        qty = row['item_quantity'] or 1
+        if sid not in grouped:
+            grouped[sid] = {
+                'sale_id': sid,
+                'sale_number': row['sale_number'],
+                'status': row['sale_status'],
+                'items': []
+            }
+        for _ in range(qty):
+            grouped[sid]['items'].append({
+                'item_id': row['item_id'],
+                'name': row['item_name'],
+                'status': row['item_status']
+            })
+
+    kitchen_sales = list(grouped.values())
+
     socketio.emit('sale_update', {
         'not_ready_sales': [{'id': row['id'], 'number': row['number']} for row in not_ready],
-        'ready_sales': [{'id': row['id'], 'number': row['number']} for row in ready]
+        'ready_sales': [{'id': row['id'], 'number': row['number']} for row in ready],
+        'kitchen_sales': kitchen_sales
     })
 
 @app.route("/")
@@ -96,6 +132,9 @@ def sumbit_cart():
         (sale_id, item_id, None, qty),
         commit=True
         )
+
+    emit_sale_update()
+
     return {"status": "ok"}
 
 
@@ -145,6 +184,8 @@ def kitchen_screen():
             })
 
     return render_template("kitchen_screen.html", sales=grouped_sales)
+
+
 
 
 @app.post("/item_status")

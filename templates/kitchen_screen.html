@@ -26,9 +26,9 @@
                     <div class="card-body">
                         {% for item in details['items'] %}
                             <div class="item-row{% if item['status'] is not none %} ready{% else %} unready{% endif %}"
-                                 data-sale-id="{{ sale_id }}"
-                                 data-item-id="{{ item['item_id'] }}"
-                                 data-ready="{{ 1 if item['status'] is not none else 0 }}">
+                                data-sale-id="{{ sale_id }}"
+                                data-item-id="{{ item['item_id'] }}"
+                                data-ready="{{ 1 if item['status'] is not none else 0 }}">
                                 <span class="check-icon"></span>
                                 <h2>{{ item['name'] }}</h2>
                             </div>
@@ -40,6 +40,31 @@
     </div>
 
     <script>
+    const socket = io();
+
+    socket.on('sale_update', (data) => {
+
+        const container = document.querySelector('.container');
+        if (!container) return;
+        const sales = data.kitchen_sales || [];
+        let html = '';
+        sales.forEach(sale => {
+            html += `<div class="card">`;
+            if (sale.status == null) {
+                html += `<div class="card-header"><h1>Order #${sale.sale_number}</h1></div>`;
+            } else {
+                html += `<div class="ready-card-header"><h1>Order #${sale.sale_number}</h1></div>`;
+            }
+            html += `<div class="card-body">`;
+            sale.items.forEach(item => {
+                const cls = item.status == null ? 'unready' : 'ready';
+                html += `<div class="item-row ${cls}" data-sale-id="${sale.sale_id}" data-item-id="${item.item_id}" data-ready="${item.status == null ? 0 : 1}"><span class="check-icon"></span><h2>${item.name}</h2></div>`;
+            });
+            html += `</div></div>`;
+        });
+        container.innerHTML = html;
+    });
+
     document.addEventListener('click', event => {
         const row = event.target.closest('.item-row');
         if (!row) return;
@@ -71,9 +96,6 @@
                 }
             }
         })
-        .catch(err => {
-            console.error(err);
-        });
     });
     </script>
 </body>
