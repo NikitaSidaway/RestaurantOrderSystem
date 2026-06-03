@@ -176,6 +176,7 @@ def item_status():
         query_db("UPDATE Sales SET status = NULL WHERE id = ?;", (sale_id,), commit=True)
         order_ready = False
 
+    emit_sale_update()
     return {"status": "ok", "order_ready": order_ready}
 
 
