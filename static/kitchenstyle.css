@@ -44,6 +44,11 @@ h1 {
   text-align: center;
 }
 
+.card-footer {
+  text-align: center;
+  padding: 2.5px 10px;
+}
+
 .container {
   display: grid;
   grid-auto-flow: column;
@@ -70,6 +75,11 @@ h1 {
   border-radius: 5px 5px 0px 0px;
 }
 
+.card-footer {
+  background-color: #FF8989;
+  border-radius: 0px 0px 5px 5px;
+}
+
 .card-body {
   padding: 10px;
 }
@@ -84,7 +94,7 @@ h1 {
   border-radius: 10px;
 }
 
-.item-row h2 {
+.card-footer h2 {
   display: inline-block;
   margin: 0;
   font-size: 25px;

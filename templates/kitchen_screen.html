@@ -6,13 +6,12 @@
     <title>Kitchen Screen</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='kitchenstyle.css') }}">
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script src="https://kit.fontawesome.com/34724dd888.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="page-wrapper">
         <div class="container">
             {% for sale_id, details in sales.items() %}
-                <div class="card">
+                <div class="card" data-sale-id="{{ sale_id }}">
                     {% if details.status is none %}
                         <div class="card-header">
                             <h1>Order #{{ details.sale_number }}</h1>
@@ -34,6 +33,13 @@
                             </div>
                         {% endfor %}
                     </div>
+
+                    <div class="card-footer">
+                        <div class="item-row">
+                            <span class="check-icon"></span>
+                            <h2>Collected</h2>
+                        </div>
+                     </div>
                 </div>
             {% endfor %}
         </div>
@@ -49,6 +55,7 @@
         const sales = data.kitchen_sales || [];
         let html = '';
         sales.forEach(sale => {
+
             html += `<div class="card">`;
             if (sale.status == null) {
                 html += `<div class="card-header"><h1>Order #${sale.sale_number}</h1></div>`;
@@ -62,7 +69,6 @@
             });
             html += `</div></div>`;
         });
-        container.innerHTML = html;
     });
 
     document.addEventListener('click', event => {
@@ -97,5 +103,7 @@
             }
         })
     });
+
     </script>
 </body>
+</html>
