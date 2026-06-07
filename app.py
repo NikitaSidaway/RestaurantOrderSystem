@@ -219,6 +219,19 @@ def item_status():
     return {"status": "ok", "order_ready": order_ready}
 
 
+@app.post("/remove_sale")
+def remove_sale():
+    data = request.get_json() or {}
+    sale_id = data.get("sale_id")
+    if sale_id is None:
+        return {"status": "error", "message": "Missing sale_id"}, 400
+
+    query_db("DELETE FROM SaleItem WHERE sale_id = ?;", (sale_id,), commit=True)
+    query_db("DELETE FROM Sales WHERE id = ?;", (sale_id,), commit=True)
+    emit_sale_update()
+    return {"status": "ok"}
+
+
 @app.post("/change_sale")
 def change_sale():
     print("test")

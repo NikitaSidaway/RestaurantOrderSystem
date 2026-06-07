@@ -76,7 +76,7 @@ h1 {
 }
 
 .card-footer {
-  background-color: #FF8989;
+  background-color: #ffa6a6;
   border-radius: 0px 0px 5px 5px;
 }
 
@@ -88,11 +88,12 @@ h1 {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin: 7px;
+  margin: 0;
   cursor: pointer;
   padding: 5px;
   border-radius: 10px;
 }
+
 
 .card-footer h2 {
   display: inline-block;

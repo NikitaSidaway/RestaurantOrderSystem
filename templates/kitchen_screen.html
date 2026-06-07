@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="card-footer">
-                        <div class="item-row">
+                        <div class="item-row" data-sale-id="{{ sale_id }}">
                             <span class="check-icon"></span>
                             <h2>Collected</h2>
                         </div>
@@ -56,7 +56,7 @@
         let html = '';
         sales.forEach(sale => {
 
-            html += `<div class="card">`;
+            html += `<div class="card" data-sale-id="${sale.sale_id}">`;
             if (sale.status == null) {
                 html += `<div class="card-header"><h1>Order #${sale.sale_number}</h1></div>`;
             } else {
@@ -67,12 +67,32 @@
                 const cls = item.status == null ? 'unready' : 'ready';
                 html += `<div class="item-row ${cls}" data-sale-id="${sale.sale_id}" data-saleitem-rowid="${item.saleitem_rowid}" data-ready="${item.status == null ? 0 : 1}"><span class="check-icon"></span><h2>${item.name}</h2></div>`;
             });
-            html += `</div></div>`;
+            html += `</div><div class="card-footer"><div class="item-row" data-sale-id="${sale.sale_id}"><span class="check-icon"></span><h2>Collected</h2></div></div></div>`;
         });
+        container.innerHTML = html;
     });
 
     document.addEventListener('click', event => {
-        const row = event.target.closest('.item-row');
+        const footerRow = event.target.closest('.card-footer .item-row');
+        if (footerRow) {
+            const card = footerRow.closest('.card');
+            const saleId = footerRow.dataset.saleId;
+            if (!saleId || !card) return;
+
+            fetch('/remove_sale', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sale_id: saleId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                card.remove();
+            })
+
+            return;
+        }
+
+        const row = event.target.closest('.card-body .item-row');
         if (!row) return;
 
         const saleId = row.dataset.saleId;
