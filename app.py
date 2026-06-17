@@ -79,11 +79,8 @@ def emit_sale_update():
     })
 
 @app.route("/")
-def cashier_screen():
-
-    sales = query_db("SELECT id, number, status FROM Sales ORDER BY id")
-
-    return render_template("cashier_screen.html", sales=sales)
+def home_screen():
+    return render_template("home_screen.html")
 
 @app.route("/cashier_screen")
 def new_cashier_screen():
