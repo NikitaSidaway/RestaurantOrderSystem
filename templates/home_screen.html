@@ -12,34 +12,38 @@
 </head>
 <body>
     <div class="page-wrapper">
-        <h1>Restraunt Order System</h1>
+        <h1>Restaurant Order System</h1>
         <div class="card-layout">
             
-            <a href="cashier_screen">
-            <div class="card">
-                <img src="{{ url_for('static', filename='images/cashier.jpg') }}" alt="Chief Screen">
+            <a href="cashier_screen" class="card">
+                <div class="blur-container">
+                    <img src="{{ url_for('static', filename='images/cashier.jpg') }}" alt="Cashier Screen">
+                </div>
                 <h2>Cashier Screen</h2>
-            </div>
             </a>
-            <a href="kitchen_screen">
-            <div class="card">
-                <img src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Chief Screen">
+
+            <a href="kitchen_screen" class="card">
+                <div class="blur-container">
+                    <img src="{{ url_for('static', filename='images/kitchen.jpg') }}" alt="Kitchen Screen">
+                </div>
                 <h2>Kitchen Screen</h2>
-            </div>
             </a>
-            <a href="customer_screen">
-            <div class="card">
-                <img src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Customer Screen">
+
+            <a href="customer_screen" class="card">
+                <div class="blur-container">
+                    <img src="{{ url_for('static', filename='images/customers.png') }}" alt="Customer Screen">
+                </div>
                 <h2>Customer Screen</h2>
-            </div>
             </a>
-            <a href="">
-            <div class="card">
-                <img src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Admin Screen">
+
+            <a href="" class="card">
+                <div class="blur-container">
+                    <img src="{{ url_for('static', filename='images/admin.png') }}" alt="Admin Screen">
+                </div>
                 <h2>Admin Screen</h2>
-            </div>
             </a>
+
         </div>
-    <div>
+    </div>
 </body>
 </html>
