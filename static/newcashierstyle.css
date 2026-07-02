@@ -33,6 +33,26 @@ h1, h2, h3, h4, h5, h6 {
   isolation: isolate;
 }
 
+body {
+  font-family: "Roboto", Helvetica;
+}
+
+h1 {
+  font-size: 30px;
+  margin: 10px 5px;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 3px;
+}
+
+h3 {
+  font-size: 15px;
+  font-weight: 900;
+  margin: 0 3px;
+}
 
 .page-wrapper {
   margin: 20px;
@@ -60,5 +80,5 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .order-column {
-  background-color: beige;
+  margin: 0px 20px;
 }
