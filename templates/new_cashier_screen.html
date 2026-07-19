@@ -14,15 +14,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    
+
 </head>
 <body>
     <div class="page-wrapper">
-
+        
         <div class="items-column">
-
+        <h1>Menu</h1>
             {% for category in categories %}
-                <h1>{{ category["name"] }}</h1>
+                <h2>{{ category["name"] }}</h2>
                 <div class="item_container">
                 {% for item in items %}
 
@@ -32,8 +32,8 @@
                             data-item-name="{{ item['item_name'] }}"
                             data-item-price="{{ item['price'] }}">
                             <img class="item_image" src="{{ url_for('static', filename='images/placeholder.png') }}" alt="item_image">
-                            <h2>{{ item["item_name"] }}</h2>
-                            <h3>${{ "%.2f"|format(item["price"]) }}</h3>
+                            <h3>{{ item["item_name"] }}</h3>
+                            <h4>${{ "%.2f"|format(item["price"]) }}</h4>
                          </div>
                     {% endif %}
                 

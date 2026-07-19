@@ -5,24 +5,32 @@ body {
 }
 
 h1 {
-  font-size: 30px;
-  margin: 10px 5px;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 1000;
 }
 
 h2 {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  padding: 15px 0px;
+}
+
+h3 {
   font-size: 20px;
   font-weight: 500;
   margin: 3px;
 }
 
-h3 {
+h4 {
   font-size: 15px;
   font-weight: 900;
   margin: 0 3px;
 }
 
 .page-wrapper {
-  margin: 20px;
+  padding: 20px 20px 0px 20px;
   display: grid;
   grid-template-columns: auto 1fr;
   height: 100vh;
@@ -49,11 +57,13 @@ h3 {
 }
 
 .order-column {
-  margin: 0px 20px;
+  border-radius: 20px 20px 0px 0px;
+  padding: 0px 20px;
   overflow-y: auto;
+  background-color: #c8c8c8;
 }
 
 .items-column {
-  margin: 0px 20px;
+  padding: 0px 20px;
   overflow-y: auto;
 }
