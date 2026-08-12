@@ -32,7 +32,7 @@
                             data-item-id="{{ item['item_id'] }}"
                             data-item-name="{{ item['item_name'] }}"
                             data-item-price="{{ item['price'] }}">
-                            <img class="item_image" src="{{ url_for('static', filename='images/placeholder.png') }}" alt="item_image">
+                            <img class="item_image" src="{{ url_for('static', filename='images/' ~ item['image']) }}">
                             <h3>{{ item["item_name"] }}</h3>
                             <h4>${{ "%.2f"|format(item["price"]) }}</h4>
                          </div>

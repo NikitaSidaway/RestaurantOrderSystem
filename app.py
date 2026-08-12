@@ -89,6 +89,7 @@ def new_cashier_screen():
         i.id AS item_id,
         i.name AS item_name,
         i.price AS price,
+        i.image AS image,
         i.category AS category,
         c.name AS category_name
     FROM
