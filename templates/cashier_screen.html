@@ -1,78 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Cashier Screen</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='cashierstyle.css') }}">
+
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
 </head>
-
 <body>
-    <div class="two-column">
-        <div class="sale-column">
-            <h2>Sales Column</h2>
-            
-            {% for item in sales %}
-                {% if item[2] == 1: %}
-                    <div class="ready-sales-card">
-                        <form action="/change_sale" method="post" class="sales-coloumn-form">
-                            <input type="hidden" name="sale_id" value={{ item[0] }}>
+    <div class="page-wrapper">
+        
+        <div class="items-column">
+        <h1>Menu</h1>
+            {% for category in categories %}
+                <h2>{{ category["name"] }}</h2>
+                <div class="item_container">
+                {% for item in items %}
 
-                            <div class="button-container">
-                                <h3>{{ item[1] }}</h3>
-                                <button type="submit" name="change" value="delete" class="sale-coloumn-delete">Delete</button>
-                                <button type="submit" name="change" value="ready" class="sale-coloumn-ready">Ready</button>
-                            </div>
-
-                        </form>
-                    </div>
-                {% else %}
-                    <div class="sales-card">
-                        <form action="/change_sale" method="post" class="sales-coloumn-form">
-                            <input type="hidden" name="sale_id" value={{ item[0] }}>
-
-                            <div class="button-container">
-                                <h3>{{ item[1] }}</h3>
-                                <button type="submit" name="change" value="delete" class="sale-coloumn-delete">Delete</button>
-                                <button type="submit" name="change" value="ready" class="sale-coloumn-ready">Ready</button>
-                            </div>
-
-                        </form>
-                    </div>
-                {% endif %}
-            {% endfor %}
-
-        </div>
-        <div class="numpad-column">
-            <form action="/add_sale" method="post" class="numpad-form">
+                    {% if item["category"] == category["id"] %}
+                        <div class="item_card"
+                            data-item-id="{{ item['item_id'] }}"
+                            data-item-name="{{ item['item_name'] }}"
+                            data-item-price="{{ item['price'] }}">
+                            <img class="item_image" src="{{ url_for('static', filename='images/' ~ item['image']) }}">
+                            <h3>{{ item["item_name"] }}</h3>
+                            <h4>${{ "%.2f"|format(item["price"]) }}</h4>
+                         </div>
+                    {% endif %}
                 
-                <input type="text" id="display" name="sale_number" class="numpad-input" readonly>
-
-                <div class="numpad">
-
-
-                    <button class="numpad-button" type="button" onclick="addNum(1)">1</button>
-                    <button class="numpad-button" type="button" onclick="addNum(2)">2</button>
-                    <button class="numpad-button" type="button" onclick="addNum(3)">3</button>
-                    <button class="numpad-button" type="button" onclick="addNum(4)">4</button>
-                    <button class="numpad-button" type="button" onclick="addNum(5)">5</button>
-                    <button class="numpad-button" type="button" onclick="addNum(6)">6</button>
-                    <button class="numpad-button" type="button" onclick="addNum(7)">7</button>
-                    <button class="numpad-button" type="button" onclick="addNum(8)">8</button>
-                    <button class="numpad-button" type="button" onclick="addNum(9)">9</button>
-                    <button class="numpad-button" type="reset" onclick="addNum(0)">&#10008;</button>
-                    <button class="numpad-button" type="button" onclick="addNum(1)">0</button>
-                    <button class="numpad-button" type="submit">&#10004;</button>
+                {% endfor %}
                 </div>
-            </form>
-
-            <script>
-                function addNum(num) {
-                    document.getElementById('display').value += num;
-                }
-            </script>
+            {% endfor %}
         </div>
+
+        <div class="order-column">
+            <h1>Cart</h1>
+            <div id="cart">
+                <ul id="cart-list"></ul>
+                <div id="cart-total">Total : $0.00</div>
+            </div>
+            <div class="buttons">
+                <button id="cart-submit" type="button">Submit Order</button>
+                <button id="cart-clear" type="button">Clear</button>
+            </div>
+        </div>
+
+        <script>
+        (function(){
+        const cart = {};
+        const list = document.getElementById("cart-list");
+        const totalEl = document.getElementById("cart-total");
+
+        function render(){
+            list.innerHTML = Object.keys(cart).map(id => {
+            const it = cart[id];
+            return `<li>${it.qty} x ${it.name} - $${(it.price * it.qty).toFixed(2)}</li>`;
+            }).join("");
+            const total = Object.values(cart).reduce((s, it) => s + it.price * it.qty, 0);
+            totalEl.textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        document.addEventListener("click", e => {
+            const card = e.target.closest(".item_card");
+            if (!card) return;
+            const id = card.dataset.itemId;
+            const name = card.dataset.itemName;
+            const price = parseFloat(card.dataset.itemPrice) || 0;
+            if (!cart[id]) cart[id] = { id, name, price, qty: 0 };
+            cart[id].qty += 1;
+            render();
+        });
+
+        document.getElementById('cart-clear')?.addEventListener("click", () => {
+            for (const k in cart) delete cart[k];
+            render();
+        });
+
+        document.getElementById("cart-submit")?.addEventListener("click", async () => {
+            if (Object.keys(cart).length === 0) return;
+
+            const response = await fetch('/submit_cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cart)
+            });
+
+            if (response.ok) {
+                for (const k in cart) delete cart[k];
+                render();
+                window.location.href = "/cashier_screen";
+            }
+        });
+        })();
+        </script>
     </div>
 </body>
-</html>

@@ -83,7 +83,7 @@ def home_screen():
     return render_template("home_screen.html")
 
 @app.route("/cashier_screen")
-def new_cashier_screen():
+def cashier_screen():
 
     items_query = """SELECT
         i.id AS item_id,
@@ -103,7 +103,7 @@ def new_cashier_screen():
     items = query_db(items_query)
     categories = query_db(categories_query)
 
-    return render_template("new_cashier_screen.html", items=items, categories=categories)
+    return render_template("cashier_screen.html", items=items, categories=categories)
 
 @app.post("/submit_cart")
 def sumbit_cart():
