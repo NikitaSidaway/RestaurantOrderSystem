@@ -90,6 +90,24 @@ li {
 #cart-total {
   font-size: 18px;
   padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
   font-weight: 700;
 }
 
+.buttons {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  justify-content: center;
+  margin: 0 auto;
+  gap: 10px;
+  width: 90%;
+}
+
+button {
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 900;
+  font-size: 18px;
+}

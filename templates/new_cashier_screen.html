@@ -7,8 +7,9 @@
 
     <title>Cashier Screen</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='newcashierstyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='newcashierstyle.css') }}">
+
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,8 +48,10 @@
             <div id="cart">
                 <ul id="cart-list"></ul>
                 <div id="cart-total">Total : $0.00</div>
+            </div>
+            <div class="buttons">
+                <button id="cart-submit" type="button">Submit Order</button>
                 <button id="cart-clear" type="button">Clear</button>
-                <button id="cart-submit" type="button">Submit</button>
             </div>
         </div>
 
