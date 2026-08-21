@@ -34,8 +34,9 @@ h2 {
 }
 
 .image-column {
-  flex: 1;
+  flex: 1.35;
 }
+
 
 .display-card {
   box-shadow: 0 10px 20px 0 rgba(0,0,0,0.2);
@@ -49,10 +50,8 @@ h2 {
 
 .display-image {
   box-shadow: 0 15px 30px 0 rgba(0,0,0,0.2);
-  width: 900px;
-  border-radius: 25px;
-  margin: 175px auto;
-  height: 1810px;
+  object-fit: cover; 
+  object-position: center;
 }
 
 
