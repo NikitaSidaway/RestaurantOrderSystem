@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -42,7 +42,7 @@
                     <div class="card-footer">
                         <div class="item-row" data-sale-id="{{ sale_id }}">
                             <span class="check-icon"></span>
-                            <h2>Collected</h2>
+                            <h3>Collected</h3>
                         </div>
                      </div>
                 </div>
@@ -72,7 +72,7 @@
                 const cls = item.status == null ? 'unready' : 'ready';
                 html += `<div class="item-row ${cls}" data-sale-id="${sale.sale_id}" data-saleitem-rowid="${item.saleitem_rowid}" data-ready="${item.status == null ? 0 : 1}"><span class="check-icon"></span><h2>${item.name}</h2></div>`;
             });
-            html += `</div><div class="card-footer"><div class="item-row" data-sale-id="${sale.sale_id}"><span class="check-icon"></span><h2>Collected</h2></div></div></div>`;
+            html += `</div><div class="card-footer"><div class="item-row" data-sale-id="${sale.sale_id}"><span class="check-icon"></span><h3>Collected</h3></div></div></div>`;
         });
         container.innerHTML = html;
     });

@@ -40,6 +40,7 @@ h4 {
 
 .item_container {
   margin: 0 5px;
+  margin-bottom: 20px;
   display: grid;
   grid-template-columns: repeat(3, 1fr); 
   gap: 20px;
@@ -48,13 +49,16 @@ h4 {
 .item_card {
   width: 200px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  border-radius: 10px;
+  border-radius: 15px;
   padding: 10px;
 }
 
 .item_image {
   width: 180px;
   height: 175px;
+  object-fit: cover; 
+  object-position: center;
+  border-radius: 10px; 
 }
 
 .order-column {
