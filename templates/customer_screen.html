@@ -15,21 +15,21 @@
 <body>
     <div class="customer-screen-container">
         <div class="preparing-column">
-            <h4>Preparing..</h4>
+            <h1>Preparing..</h1>
             <div id="preparing-list">
                 {% for item in not_ready_sales %}
                     <div class="display-card">
-                        <h5>{{ item[1] }}</h5>
+                        <h2>{{ item[1] }}</h2>
                     </div>
                 {% endfor %}
             </div>
         </div>
         <div class="please-collect-column">
-            <h4>Please Collect..</h4>
+            <h1>Please Collect..</h1>
             <div id="ready-list">
                 {% for item in ready_sales %}
                     <div class="display-card">
-                        <h5>{{ item[1] }}</h5>
+                        <h2>{{ item[1] }}</h2>
                     </div>
                 {% endfor %}
             </div>
@@ -43,25 +43,45 @@
         const socket = io();
 
         socket.on('sale_update', function(data) {
-
             const preparingList = document.getElementById('preparing-list');
-            preparingList.innerHTML = '';  
+            preparingList.innerHTML = '';
+
             data.not_ready_sales.forEach(sale => {
                 const card = document.createElement('div');
                 card.className = 'display-card';
-                card.innerHTML = `<h5>${sale.number}</h5>`;
+                card.innerHTML = `<h2>${sale.number}</h2>`;
                 preparingList.appendChild(card);
             });
 
             const readyList = document.getElementById('ready-list');
-            readyList.innerHTML = '';  
+            readyList.innerHTML = '';
+
             data.ready_sales.forEach(sale => {
                 const card = document.createElement('div');
                 card.className = 'display-card';
-                card.innerHTML = `<h5>${sale.number}</h5>`;
+                card.innerHTML = `<h2>${sale.number}</h2>`;
                 readyList.appendChild(card);
             });
         });
+
+        function startAutoScroll(listId) {
+            const list = document.getElementById(listId);
+
+            setInterval(() => {
+                if (list.scrollHeight <= list.clientHeight) {
+                    return;
+                }
+
+                list.scrollTop += 1;
+
+                if (list.scrollTop + list.clientHeight >= list.scrollHeight) {
+                    list.scrollTop = 0;
+                }
+            }, 40);
+        }
+
+        startAutoScroll('preparing-list');
+        startAutoScroll('ready-list');
     </script>
 </body>
 </html>
