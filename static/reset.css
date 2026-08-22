@@ -1,34 +1,44 @@
+/* Make element dimensions include padding and borders. */
 *, *::before, *::after {
   box-sizing: border-box;
 }
+/* Remove browser default margins from most elements. */
 *:not(dialog) {
   margin: 0;
 }
+/* Allow intrinsic sizing animations when the user permits motion. */
 @media (prefers-reduced-motion: no-preference) {
   html {
     interpolate-size: allow-keywords;
   }
 }
+/* Establish readable body text and antialiasing. */
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
+/* Keep media elements block-level and inside their containers. */
 img, picture, video, canvas, svg {
   display: block;
   max-width: 100%;
 }
+/* Make form controls inherit the surrounding font. */
 input, button, textarea, select {
   font: inherit;
 }
+/* Prevent long text from overflowing headings and paragraphs. */
 p, h1, h2, h3, h4, h5, h6 {
   overflow-wrap: break-word;
 }
+/* Improve paragraph line wrapping. */
 p {
   text-wrap: pretty;
 }
+/* Balance heading lines for more even text blocks. */
 h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
 }
+/* Keep root application containers isolated from outside content. */
 #root, #__next {
   isolation: isolate;
 }

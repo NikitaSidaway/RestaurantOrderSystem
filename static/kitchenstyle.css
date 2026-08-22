@@ -1,34 +1,41 @@
-﻿body {
+﻿/* Keep the kitchen screen fixed to the viewport. */
+body {
   font-family: "Roboto", Helvetica;
   height: 100vh;
   overflow: hidden;
 }
 
+/* Add space around the kitchen board. */
 .page-wrapper {
   margin: 20px;
 }
 
+/* Set the size and weight of order headings. */
 h1 {
   text-align: center;
   font-size: 35px;
   font-weight: 900;
 }
 
+/* Style item names inside order cards. */
 h2 {
   font-size: 20px;
   font-weight: 550;
 }
 
+/* Style the collected action label. */
 h3 {
   font-size: 25px;
   font-weight: 650;
 }
 
+/* Center the collected action within the card footer. */
 .card-footer {
   text-align: center;
   padding: 2.5px 10px;
 }
 
+/* Place orders in horizontally scrolling columns. */
 .container {
   display: grid;
   grid-auto-flow: column;
@@ -43,6 +50,7 @@ h3 {
   scrollbar-gutter: stable;
 }
 
+/* Stack each order's header, items, and footer vertically. */
 .card {
   display: flex;
   flex-direction: column;
@@ -52,27 +60,32 @@ h3 {
   align-self: start;
 }
 
+/* Use a red header for orders still being prepared. */
 .card-header {
   background-color: #FF8989;
   border-radius: 5px 5px 0px 0px;
 }
 
+/* Use a green header for orders whose items are ready. */
 .ready-card-header {
   background-color: #A7D477;
   border-radius: 5px 5px 0px 0px;
 }
 
+/* Use a distinct footer color for the collection action. */
 .card-footer {
   background-color: #ffa6a6;
   border-radius: 0px 0px 5px 5px;
 }
 
+/* Let the item list fill the card and scroll independently. */
 .card-body {
   flex: 1;
   padding: 10px;
   overflow-y: scroll;
 }
 
+/* Align the status icon and item name in one clickable row. */
 .item-row {
   display: flex;
   align-items: center;
@@ -83,6 +96,7 @@ h3 {
   border-radius: 10px;
 }
 
+/* Draw the circular status icon. */
 .check-icon {
   display: inline-flex;
   align-items: center;
@@ -100,26 +114,31 @@ h3 {
   font-weight: 900;
 }
 
+/* Show the default check mark for an item row. */
 .check-icon::after {
   content: "✓";
 }
 
+/* Use a dark filled icon for ready items. */
 .item-row.ready .check-icon {
   border-color: #000;
   background: #000;
   color: #fff;
 }
 
+/* Use the filled check mark for ready items. */
 .item-row.ready .check-icon::after {
   content: "✔";
 }
 
+/* Use a light outlined icon for unready items. */
 .item-row.unready .check-icon {
   border-color: #000;
   background: #fff;
   color: #000;
 }
 
+/* Use the outline check mark for unready items. */
 .item-row.unready .check-icon::after {
   content: "✓";
 }
