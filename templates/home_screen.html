@@ -1,25 +1,32 @@
 <html lang="en">
 <head>
 
+    <!-- Define the document encoding and responsive viewport. -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Set the browser tab title. -->
     <title>Cashier Screen</title>
 
+    <!-- Load the home screen styles and shared reset rules. -->
     <link rel="stylesheet" href="{{ url_for('static', filename='homestyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
+    <!-- Load Socket.IO for shared screen communication. -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
+    <!-- Load the page font. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
 </head>
 <body>
+    <!-- Wrap the landing page content. -->
     <div class="page-wrapper">
+        <!-- Identify the restaurant order system. -->
         <h1>Restaurant Order System</h1>
         <div class="card-layout">
-            
+            <!-- Link to the cashier station. -->
             <a href="cashier_screen" class="card">
                 <div class="blur-container">
                     <img src="{{ url_for('static', filename='images/cashier.jpg') }}" alt="Cashier Screen">
@@ -27,6 +34,7 @@
                 <h2>Cashier Screen</h2>
             </a>
 
+            <!-- Link to the kitchen station. -->
             <a href="kitchen_screen" class="card">
                 <div class="blur-container">
                     <img src="{{ url_for('static', filename='images/kitchen.jpg') }}" alt="Kitchen Screen">
@@ -34,6 +42,7 @@
                 <h2>Kitchen Screen</h2>
             </a>
 
+            <!-- Link to the customer display. -->
             <a href="customer_screen" class="card">
                 <div class="blur-container">
                     <img src="{{ url_for('static', filename='images/customers.png') }}" alt="Customer Screen">

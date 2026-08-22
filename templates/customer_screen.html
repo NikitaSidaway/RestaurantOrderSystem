@@ -2,21 +2,28 @@
 <html lang="en">
 <head>
 
+    <!-- Define the document encoding and responsive viewport. -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Set the browser tab title. -->
     <title>Customer Screen</title>
 
+    <!-- Load customer display styles and shared reset rules. -->
     <link rel="stylesheet" href="{{ url_for('static', filename='customerstyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
+    <!-- Load Socket.IO for live order updates. -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     
 </head>
 <body>
+    <!-- Divide the display into preparing, ready, and image columns. -->
     <div class="customer-screen-container">
         <div class="preparing-column">
+            <!-- Show orders that are still being prepared. -->
             <h1>Preparing..</h1>
             <div id="preparing-list">
+                <!-- Render the initial preparing order list from Flask. -->
                 {% for item in not_ready_sales %}
                     <div class="display-card">
                         <h2>{{ item[1] }}</h2>
@@ -25,8 +32,10 @@
             </div>
         </div>
         <div class="please-collect-column">
+            <!-- Show orders that customers can collect. -->
             <h1>Please Collect..</h1>
             <div id="ready-list">
+                <!-- Render the initial ready order list from Flask. -->
                 {% for item in ready_sales %}
                     <div class="display-card">
                         <h2>{{ item[1] }}</h2>
@@ -35,17 +44,21 @@
             </div>
         </div>
         <div class="image-column">
+            <!-- Display the customer-facing food image. -->
             <img class="display-image" src="{{ url_for('static', filename='images/foodphoto.jpg') }}">
         </div>
     </div>
 
     <script>
+        // Connect this screen to the live order update channel.
         const socket = io();
 
+        // Replace both customer lists whenever order data changes.
         socket.on('sale_update', function(data) {
             const preparingList = document.getElementById('preparing-list');
             preparingList.innerHTML = '';
 
+            // Rebuild the preparing list from the latest server data.
             data.not_ready_sales.forEach(sale => {
                 const card = document.createElement('div');
                 card.className = 'display-card';
@@ -56,6 +69,7 @@
             const readyList = document.getElementById('ready-list');
             readyList.innerHTML = '';
 
+            // Rebuild the ready list from the latest server data.
             data.ready_sales.forEach(sale => {
                 const card = document.createElement('div');
                 card.className = 'display-card';
@@ -64,9 +78,11 @@
             });
         });
 
+        // Slowly scroll a list when it contains more orders than it can show.
         function startAutoScroll(listId) {
             const list = document.getElementById(listId);
 
+            // Loop back to the top after reaching the bottom.
             setInterval(() => {
                 if (list.scrollHeight <= list.clientHeight) {
                     return;
@@ -80,6 +96,7 @@
             }, 40);
         }
 
+        // Enable scrolling for both order columns.
         startAutoScroll('preparing-list');
         startAutoScroll('ready-list');
     </script>

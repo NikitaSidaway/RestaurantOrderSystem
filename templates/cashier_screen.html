@@ -2,32 +2,41 @@
 <html lang="en">
 <head>
 
+    <!-- Define the document encoding and responsive viewport. -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Set the browser tab title. -->
     <title>Cashier Screen</title>
 
+    <!-- Load cashier styles and shared reset rules. -->
     <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='cashierstyle.css') }}">
 
+    <!-- Load Socket.IO for consistency with the other screens. -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
+    <!-- Load the cashier page font. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
 </head>
 <body>
+    <!-- Divide the cashier page into menu and cart columns. -->
     <div class="page-wrapper">
         
         <div class="items-column">
+        <!-- Render each menu category and its matching items. -->
         <h1>Menu</h1>
             {% for category in categories %}
                 <h2>{{ category["name"] }}</h2>
                 <div class="item_container">
+                <!-- Filter the full item list to this category. -->
                 {% for item in items %}
 
                     {% if item["category"] == category["id"] %}
+                        <!-- Store item details on the card for the cart script. -->
                         <div class="item_card"
                             data-item-id="{{ item['item_id'] }}"
                             data-item-name="{{ item['item_name'] }}"
@@ -44,6 +53,7 @@
         </div>
 
         <div class="order-column">
+            <!-- Display the current cart and its actions. -->
             <h1>Cart</h1>
             <div id="cart">
                 <ul id="cart-list"></ul>
@@ -56,11 +66,13 @@
         </div>
 
         <script>
+        // Keep the cashier cart in memory until it is submitted.
         (function(){
         const cart = {};
         const list = document.getElementById("cart-list");
         const totalEl = document.getElementById("cart-total");
 
+        // Redraw cart rows and recalculate the total.
         function render(){
             list.innerHTML = Object.keys(cart).map(id => {
             const it = cart[id];
@@ -70,6 +82,7 @@
             totalEl.textContent = `Total: $${total.toFixed(2)}`;
         }
 
+        // Add one item to the cart when its menu card is clicked.
         document.addEventListener("click", e => {
             const card = e.target.closest(".item_card");
             if (!card) return;
@@ -81,14 +94,17 @@
             render();
         });
 
+        // Empty the cart when the clear button is selected.
         document.getElementById('cart-clear')?.addEventListener("click", () => {
             for (const k in cart) delete cart[k];
             render();
         });
 
+        // Send the cart to Flask and reset the cashier page after success.
         document.getElementById("cart-submit")?.addEventListener("click", async () => {
             if (Object.keys(cart).length === 0) return;
 
+            // Submit the cart as JSON to the order endpoint.
             const response = await fetch('/submit_cart', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

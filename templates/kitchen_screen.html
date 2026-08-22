@@ -2,21 +2,28 @@
 <html lang="en">
 <head>
 
+    <!-- Define the document encoding and responsive viewport. -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Set the browser tab title. -->
     <title>Kitchen Screen</title>
 
+    <!-- Load kitchen styles and shared reset rules. -->
     <link rel="stylesheet" href="{{ url_for('static', filename='kitchenstyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
+    <!-- Load Socket.IO for live kitchen updates. -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     
 </head>
 <body>
+    <!-- Hold all active kitchen order cards. -->
     <div class="page-wrapper">
         <div class="container">
+            <!-- Render the initial grouped orders from Flask. -->
             {% for sale_id, details in sales.items() %}
                 <div class="card" data-sale-id="{{ sale_id }}">
+                    <!-- Use a different header style for ready orders. -->
                     {% if details.status is none %}
                         <div class="card-header">
                             <h1>Order #{{ details.sale_number }}</h1>
@@ -28,6 +35,7 @@
                     {% endif %}
 
                     <div class="card-body">
+                        <!-- Render each item with its current preparation state. -->
                         {% for item in details['items'] %}
                             <div class="item-row{% if item['status'] is not none %} ready{% else %} unready{% endif %}"
                                 data-sale-id="{{ sale_id }}"
@@ -39,6 +47,7 @@
                         {% endfor %}
                     </div>
 
+                    <!-- Let the kitchen mark the completed order as collected. -->
                     <div class="card-footer">
                         <div class="item-row" data-sale-id="{{ sale_id }}">
                             <span class="check-icon"></span>
@@ -51,14 +60,17 @@
     </div>
 
     <script>
+    // Connect this screen to the live order update channel.
     const socket = io();
 
+    // Rebuild kitchen cards whenever the server broadcasts new order data.
     socket.on('sale_update', (data) => {
 
         const container = document.querySelector('.container');
         if (!container) return;
         const sales = data.kitchen_sales || [];
         let html = '';
+        // Render each sale and all of its items from the refreshed state.
         sales.forEach(sale => {
 
             html += `<div class="card" data-sale-id="${sale.sale_id}">`;
@@ -68,6 +80,7 @@
                 html += `<div class="ready-card-header"><h1>Order #${sale.sale_number}</h1></div>`;
             }
             html += `<div class="card-body">`;
+            // Apply ready or unready styling to each kitchen item.
             sale.items.forEach(item => {
                 const cls = item.status == null ? 'unready' : 'ready';
                 html += `<div class="item-row ${cls}" data-sale-id="${sale.sale_id}" data-saleitem-rowid="${item.saleitem_rowid}" data-ready="${item.status == null ? 0 : 1}"><span class="check-icon"></span><h2>${item.name}</h2></div>`;
@@ -77,13 +90,16 @@
         container.innerHTML = html;
     });
 
+    // Handle item status changes and order collection through event delegation.
     document.addEventListener('click', event => {
         const footerRow = event.target.closest('.card-footer .item-row');
+        // Remove an order after it has been collected.
         if (footerRow) {
             const card = footerRow.closest('.card');
             const saleId = footerRow.dataset.saleId;
             if (!saleId || !card) return;
 
+            // Tell Flask to delete the sale and its items.
             fetch('/remove_sale', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -97,6 +113,7 @@
             return;
         }
 
+        // Otherwise, handle a click that toggles one item's ready state.
         const row = event.target.closest('.card-body .item-row');
         if (!row) return;
 
@@ -105,6 +122,7 @@
         const isReady = row.classList.contains('ready');
         const nextStatus = isReady ? 0 : 1;
 
+        // Send the new item status to the server.
         fetch('/item_status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -118,6 +136,7 @@
             row.classList.toggle('unready', nextStatus === 0);
             row.dataset.ready = nextStatus;
 
+            // Update the order header when all items become ready or not ready.
             const card = row.closest('.card');
             if (card) {
                 const header = card.querySelector('.card-header, .ready-card-header');
