@@ -28,8 +28,9 @@ def get_db():
 
 # Close the request's database connection when the request finishes.
 @app.teardown_appcontext
-def close_connection():
+def close_connection(exception=None):
     """Close the database connection once request finishes"""
+    del exception
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
