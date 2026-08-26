@@ -1,9 +1,10 @@
-# Import Flask helpers for routing, templates, request data, and redirects.
-from flask import Flask, render_template, g, request, redirect
-# Import Socket.IO helpers for real-time order updates.
-from flask_socketio import SocketIO, emit
-# Use SQLite for the restaurant order database.
+"""Use SQLite for the restaurant order database."""
 import sqlite3
+# Import Flask helpers for routing, templates, request data, and redirects.
+from flask import Flask, render_template, g, request
+# Import Socket.IO helpers for real-time order updates.
+from flask_socketio import SocketIO
+
 
 # Create the Flask application.
 app = Flask(__name__)
@@ -14,36 +15,43 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Store the SQLite database in the application directory.
 DATABASE = 'RestaurantDatabase.db'
 
+
 # Open one database connection for the current Flask request.
 def get_db():
+    """Open database for Flask request"""
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
         db.row_factory = sqlite3.Row
     return db
 
+
 # Close the request's database connection when the request finishes.
 @app.teardown_appcontext
-def close_connection(exception):
+def close_connection():
+    """Close the database connection once request finishes"""
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
 
-    # Run a database query and optionally return its inserted row ID.
+
+# Run a database query and optionally return its inserted row ID.
 def query_db(query, args=(), one=False, commit=False):
+    """Run database query"""
     cur = get_db().execute(query, args)
     if commit:
         get_db().commit()
         lastrowid = cur.lastrowid
         cur.close()
         return lastrowid
-    else:
-        rv = cur.fetchall()
-        cur.close()
-        return (rv[0] if rv else None) if one else rv
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
+
 
 # Gather the current order state and broadcast it to every connected screen.
 def emit_sale_update():
+    """Gather current order state and broadcast"""
     # Separate orders still being prepared from orders marked ready.
     not_ready = query_db("SELECT id, number, status FROM Sales WHERE status IS NULL ORDER BY id")
     ready = query_db("SELECT id, number, status FROM Sales WHERE status = 1 ORDER BY id")
@@ -90,15 +98,18 @@ def emit_sale_update():
         'kitchen_sales': kitchen_sales
     })
 
+
 # Display the home screen with links to each restaurant station.
 @app.route("/")
 def home_screen():
+    """Display home screen"""
     return render_template("home_screen.html")
+
 
 # Load menu items and categories for the cashier screen.
 @app.route("/cashier_screen")
 def cashier_screen():
-
+    """Load information on cashier screen"""
     items_query = """SELECT
         i.id AS item_id,
         i.name AS item_name,
@@ -119,9 +130,11 @@ def cashier_screen():
 
     return render_template("cashier_screen.html", items=items, categories=categories)
 
+
 # Create a sale from the cashier's submitted cart.
 @app.post("/submit_cart")
 def sumbit_cart():
+    """Create a sale"""
     # Read the cart JSON sent by the cashier page.
     cart = request.get_json()
 
@@ -136,7 +149,7 @@ def sumbit_cart():
         "INSERT INTO Sales (number) VALUES (?)",
         (next_number,),
         commit=True
-    ) 
+    )
 
     # Store one SaleItem row for each ordered quantity.
     for item_id, item in cart.items():
@@ -153,20 +166,22 @@ def sumbit_cart():
 
     return {"status": "ok"}
 
+
 # Load the customer-facing lists of preparing and ready orders.
 @app.route("/customer_screen")
 def customer_screen():
-
+    """Load information on customer screen"""
     not_ready = query_db("SELECT id, number, status FROM Sales WHERE status IS NULL ORDER BY id")
     ready = query_db("SELECT id, number, status FROM Sales WHERE status = 1 ORDER BY id")
 
     return render_template("customer_screen.html", not_ready_sales=not_ready, ready_sales=ready)
 
+
 # Load kitchen orders and group their items by sale.
 @app.route("/kitchen_screen")
 def kitchen_screen():
-
-    sqlquery = """SELECT 
+    """Kitchen screen"""
+    sqlquery = """SELECT
         Sales.id AS sale_id,
         Sales.number AS sale_number,
         Sales.status AS sale_status,
@@ -201,9 +216,11 @@ def kitchen_screen():
 
     return render_template("kitchen_screen.html", sales=grouped_sales)
 
+
 # Update the preparation status of one item in an order.
 @app.post("/item_status")
 def item_status():
+    """Update the status of an order"""
     # Read the item status change sent by the kitchen screen.
     data = request.get_json() or {}
     sale_id = data.get("sale_id")
@@ -239,9 +256,11 @@ def item_status():
     emit_sale_update()
     return {"status": "ok", "order_ready": order_ready}
 
+
 # Remove a collected sale and all of its items.
 @app.post("/remove_sale")
 def remove_sale():
+    """Remove a collected sale"""
     data = request.get_json() or {}
     sale_id = data.get("sale_id")
     if sale_id is None:
@@ -253,55 +272,13 @@ def remove_sale():
     emit_sale_update()
     return {"status": "ok"}
 
-# Handle the legacy form-based sale actions from the home screen.
-@app.post("/change_sale")
-def change_sale():
-    print("test")
-    request_change = request.form.get("change")
-    sale_id = request.form.get("sale_id")
-    
-    # Delete the selected sale when requested.
-    if request_change == "delete":
-
-        sql_sale_change = ("DELETE FROM Sales WHERE id = (?);")
-        query_db(sql_sale_change, (sale_id,))
-        get_db().commit()
-
-    # Mark the selected sale as ready when requested.
-    elif request_change == "ready":
-        
-        sql_sale_change = ("UPDATE Sales SET status = 1 WHERE id = (?);")
-        query_db(sql_sale_change, (sale_id,))
-        get_db().commit()
-
-    # Keep the connected displays synchronized after the action.
-    emit_sale_update()
-
-    return redirect('/')
-
-# Add a sale using a manually entered order number.
-@app.post("/add_sale")
-def sale_numpad():
-    sale_number = request.form["sale_number"]
-
-    sql_sale_number = ("INSERT INTO Sales (number) VALUES (?);")
-
-
-    # Insert the manually entered sale number and commit it.
-    query_db(sql_sale_number, (sale_number,))
-
-    get_db().commit()
-
-    # Refresh every connected display.
-    emit_sale_update()
-
-    return redirect('/')
 
 # Send the current order state when a screen first connects.
 @socketio.on('connect')
 def handle_connect():
-    print('Client connected')
+    """Send the current order state when a screen connectets"""
     emit_sale_update()
+
 
 # Start the Socket.IO development server when this file is run directly.
 if __name__ == '__main__':
