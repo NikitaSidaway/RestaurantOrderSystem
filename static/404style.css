@@ -1,0 +1,15 @@
+body {
+    font-family: "Roboto", Helvetica;
+    height: 100vh;
+    overflow: hidden;
+    margin: 40px;
+}
+
+h1 {
+    margin-bottom: 10px;
+    font-weight: 800;
+}
+
+a {
+    margin-top: 10px;
+}
