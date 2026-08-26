@@ -100,6 +100,12 @@ def emit_sale_update():
     })
 
 
+
+@app.errorhandler(404)
+def page_not_found(error):
+    """Page not found handler"""
+    return render_template('404.html'), 404
+
 # Display the home screen with links to each restaurant station.
 @app.route("/")
 def home_screen():
